@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Peca, Tabuleiro } from '../models/model';
+import { Diagonal, Peca, Tabuleiro } from '../models/model';
 
 @Component({
   selector: 'app-tabuleiro',
@@ -11,8 +11,10 @@ export class TabuleiroComponent implements OnInit {
   pecaSelecionada: Peca = null;
   COR_BRANCA = '';
   COR_PRETA = '';
+  vetor_diagonal_secundaria = [49, 49, 0];
   linhas = [1, 2, 3, 4, 5, 6, 7, 8];
   colunas = [1, 2, 3, 4, 5, 6, 7, 8];
+  digonais: Diagonal[] = [];
   constructor() { }
 
   ngOnInit(): void {
@@ -20,8 +22,15 @@ export class TabuleiroComponent implements OnInit {
     this.desenhaTabuleiro();
     this.preencherPecasJogadores();
     this.indexandoPecas();
+    this.inicializaDiagonais();
   }
+  inicializaDiagonais() {
 
+    const diagonalPrincipal1 = new Diagonal(new Peca(false, 1, 8), new Peca(false, 8, 1));
+    const diagonalSecundaria1 = new Diagonal(new Peca(false, 1, 1), new Peca(false, 8, 8));
+    this.digonais.push(diagonalPrincipal1);
+    this.digonais.push(diagonalSecundaria1);
+  }
   ePositivo(n: number): boolean {
     return Math.pow(-1, n) == 1;
   }
@@ -94,26 +103,41 @@ export class TabuleiroComponent implements OnInit {
       }
     }
   }
-  getIndex(peca: Peca) {
-    let index = -1;
-    for (let linha = 1; linha < 9; linha++) {
-      index = this.tabuleiro.pecas[linha].indexOf(peca);
-    }
-    return index;
+  obterVetor(origem: Peca, destino: Peca) {
+    let vetor = [];
+    const v1 = Math.pow(destino.coluna - origem.coluna, 2);
+    const v2 = Math.pow(destino.linha - origem.linha, 2);
+    vetor.push(v1); // x
+    vetor.push(v2); // y
+    vetor.push(0); // z
+    return vetor;
   }
-  getLinha(peca: Peca){
+  calcDeterminante(vetor1 = [], vetor2 = []) {
+    const a1 = vetor1[0];
+    const b1 = vetor2[0];
+    const a2 = vetor1[1];
+    const b2 = vetor2[1];
+    const a3 = vetor1[2];
+    const b3 = vetor2[2];
 
-    for (let linha = 1; linha < 9; linha++) {
-      const existe = this.tabuleiro.pecas[linha].filter(p => p.id==peca.id).length>0;
-      if(existe) return linha;
-    }
-    return -1;
+    const v1 = a2 * b3 - a3 * b2;
+    const v2 = a3 * b1 - a1 * b3;
+    const v3 = a1 * b2 - a2 * b1;
+    return v1 + v2 + v3;
+  }
+  Ediagonal(origem: Peca, destino: Peca) {
+    const vet1 = this.obterVetor(origem,destino);
+
+    return this.calcDeterminante(vet1,this.vetor_diagonal_secundaria) == 0;
   }
   moverPeca(destino: Peca) {
 
-    const linhaOrigem = this.pecaSelecionada.linha;
-    const colunaOrigem = this.pecaSelecionada.coluna;
-    this.tabuleiro.pecas[destino.linha][destino.coluna] = this.pecaSelecionada;
-    this.tabuleiro.pecas[linhaOrigem][colunaOrigem] = destino;
+    if (this.Ediagonal(this.pecaSelecionada, destino)) {
+      const linhaOrigem = this.pecaSelecionada.linha;
+      const colunaOrigem = this.pecaSelecionada.coluna;
+      this.tabuleiro.pecas[destino.linha][destino.coluna] = this.pecaSelecionada;
+      this.tabuleiro.pecas[linhaOrigem][colunaOrigem] = destino;
+    }
+
   }
 }

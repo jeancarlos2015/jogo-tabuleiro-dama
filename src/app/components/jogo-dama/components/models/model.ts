@@ -7,7 +7,7 @@ export class Peca {
   estaVazio = true;
   linha = 1;
   coluna = 1;
-  constructor(ePreto = false,linha=1,coluna=1) {
+  constructor(ePreto = false, linha = 1, coluna = 1) {
     this.ePreto = ePreto;
     this.linha = linha;
     this.coluna = coluna;
@@ -20,4 +20,13 @@ export class Casa {
 export class Tabuleiro {
   pecas: Peca[][];
 
+}
+
+export class Diagonal {
+  origem: Peca;
+  destino: Peca;
+  constructor(origem, destino) {
+    this.origem = origem;
+    this.destino = destino;
+  }
 }
