@@ -131,7 +131,7 @@ export class TabuleiroComponent implements OnInit {
     return this.calcDeterminante(vet1, this.vetor_diagonal_secundaria) == 0 && this.calcDistanciaEntrePontos(origem, destino) == 1;
   }
   moverPeca(destino: Casa) {
-
+    if (destino.peca) return;
     if (this.Ediagonal(this.casaSelecionada, destino)) {
       destino.peca = Object.assign({}, this.casaSelecionada.peca);
       this.casaSelecionada.peca = null;
