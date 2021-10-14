@@ -6,6 +6,7 @@ import { TabuleiroComponent } from './tabuleiro.component';
 import {TableModule} from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
 import { PecaTabuleiroComponent } from './peca-tabuleiro/peca-tabuleiro.component';
+
 @NgModule({
   declarations: [
     TabuleiroComponent,

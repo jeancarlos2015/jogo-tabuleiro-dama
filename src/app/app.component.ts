@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MegaMenuItem, PrimeNGConfig } from 'primeng/api';
+import { MegaMenuItem, PrimeNGConfig, MessageService } from 'primeng/api';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,7 +7,10 @@ import { MegaMenuItem, PrimeNGConfig } from 'primeng/api';
 })
 export class AppComponent implements OnInit {
   items: MegaMenuItem[];
-  constructor(private primengConfig: PrimeNGConfig) { }
+  constructor(
+    private primengConfig: PrimeNGConfig,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit() {
     this.primengConfig.ripple = true;
@@ -26,31 +29,31 @@ export class AppComponent implements OnInit {
                 {
                   label: 'Finalizar Jogo',
                   command: () => {
-                    console.log('foi')
+                    this.mostrarMensagemAtencao('Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Novo Jogo',
                   command: () => {
-                    console.log('foi')
+                    this.mostrarMensagemAtencao('Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Salvar Jogo',
                   command: () => {
-                    console.log('foi')
+                    this.mostrarMensagemAtencao('Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Voltar',
                   command: () => {
-                    console.log('foi')
+                    this.mostrarMensagemAtencao('Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Avançar',
                   command: () => {
-                    console.log('foi')
+                    this.mostrarMensagemAtencao('Em desenvolvimento');
                   }
                 }
               ]
@@ -61,5 +64,20 @@ export class AppComponent implements OnInit {
         ]
       }
     ];
+  }
+
+  mostrarMensagem(detail,summary,serverity) {
+    this.messageService.add({ severity: serverity, summary: summary, detail: detail});
+  }
+  mostrarMensagemSucesso(mensagem:string){
+    this.mostrarMensagem(mensagem,'Sucesso','success');
+  }
+
+  mostrarMensagemAtencao(mensagem:string){
+    this.mostrarMensagem(mensagem,'Atenção','warn');
+  }
+
+  mostrarMensagemErro(mensagem:string){
+    this.mostrarMensagem(mensagem,'Erro','error');
   }
 }

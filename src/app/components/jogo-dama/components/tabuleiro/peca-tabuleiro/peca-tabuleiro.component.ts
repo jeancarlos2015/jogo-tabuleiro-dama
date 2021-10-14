@@ -24,12 +24,12 @@ export class PecaTabuleiroComponent implements OnInit {
 
 
   capturaItem(peca: Peca) {
-    if (environment.production) return;
+
     this.selecionarItemEvento.emit(peca);
   }
 
   moverItem(peca: Peca) {
-    if (environment.production) return;
+
     this.moverItemEvento.emit(peca);
   }
 }

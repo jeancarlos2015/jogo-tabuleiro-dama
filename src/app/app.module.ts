@@ -8,6 +8,8 @@ import { JogoDamaRoutingModule } from './components/jogo-dama/jogo-dama-routing.
 import { JogoDamaModule } from './components/jogo-dama/jogo-dama.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MegaMenuModule} from 'primeng/megamenu';
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
 @NgModule({
   declarations: [
     AppComponent
@@ -16,11 +18,12 @@ import {MegaMenuModule} from 'primeng/megamenu';
     BrowserModule,
     BrowserAnimationsModule,
     MegaMenuModule,
+    ToastModule,
     AppRoutingModule,
     JogoDamaRoutingModule,
     JogoDamaModule,
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
