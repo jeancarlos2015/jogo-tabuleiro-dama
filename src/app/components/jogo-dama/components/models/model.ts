@@ -1,30 +1,34 @@
 export class Peca {
-  color;
-  ePreto = false;
   valor = 1;
   id;
-  selecionado = false;
-  estaVazio = true;
-  linha = 1;
-  coluna = 1;
-  constructor(ePreto = false, linha = 1, coluna = 1) {
-    this.ePreto = ePreto;
-    this.linha = linha;
-    this.coluna = coluna;
+  constructor(valor = 1, id = 1) {
+    this.valor = valor;
+    this.id = id;
   }
 }
 export class Casa {
-  cor;
   peca: Peca;
+  ePreto = false;
+  linha;
+  coluna;
+  valor=1;
+  selecionado = false;
+  constructor(peca: Peca = null, ePreto = false, linha = 1, coluna = 1) {
+    this.peca = peca;
+    this.ePreto = ePreto;
+    this.linha = linha;
+    this.coluna = coluna;
+    this.selecionado = peca != null;
+    this.valor = peca ? peca.valor : this.valor;
+  }
 }
 export class Tabuleiro {
-  pecas: Peca[][];
-
+  casas: Casa[][];
 }
 
 export class Diagonal {
-  origem: Peca;
-  destino: Peca;
+  origem: Casa;
+  destino: Casa;
   constructor(origem, destino) {
     this.origem = origem;
     this.destino = destino;

@@ -1,5 +1,5 @@
 import { environment } from './../../../../../../environments/environment';
-import { Tabuleiro, Peca } from './../../models/model';
+import { Tabuleiro, Peca, Casa } from './../../models/model';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
@@ -12,8 +12,8 @@ export class PecaTabuleiroComponent implements OnInit {
   @Input() tabuleiro = new Tabuleiro();
   @Input() linha = 1;
   @Input() coluna = 1;
-  @Output() selecionarItemEvento = new EventEmitter<Peca>();
-  @Output() moverItemEvento = new EventEmitter<Peca>();
+  @Output() selecionarItemEvento = new EventEmitter<Casa>();
+  @Output() moverItemEvento = new EventEmitter<Casa>();
 
   constructor() { }
 
@@ -23,13 +23,13 @@ export class PecaTabuleiroComponent implements OnInit {
 
 
 
-  capturaItem(peca: Peca) {
+  capturaItem(casa: Casa) {
 
-    this.selecionarItemEvento.emit(peca);
+    this.selecionarItemEvento.emit(casa);
   }
 
-  moverItem(peca: Peca) {
+  moverItem(casa: Casa) {
 
-    this.moverItemEvento.emit(peca);
+    this.moverItemEvento.emit(casa);
   }
 }

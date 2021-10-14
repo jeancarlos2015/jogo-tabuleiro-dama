@@ -16,7 +16,7 @@
               <ng-template pTemplate="body" let-linha>
                 <tr>
                   <td *ngFor="let coluna of colunas"
-                    [ngClass]="{celulaBranca: !tabuleiro.pecas[linha][coluna].ePreto, celulaPreta: tabuleiro.pecas[linha][coluna].ePreto}">
+                    [ngClass]="{celulaBranca: !tabuleiro.casas[linha][coluna].ePreto, celulaPreta: tabuleiro.casas[linha][coluna].ePreto}">
 
                     <app-peca-tabuleiro [tabuleiro]="tabuleiro" [linha]="linha" [coluna]="coluna"
                       (moverItemEvento)="moverPeca($event)" (selecionarItemEvento)="capturaItem($event)">

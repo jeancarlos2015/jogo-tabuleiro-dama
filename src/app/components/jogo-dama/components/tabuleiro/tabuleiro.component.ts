@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Diagonal, Peca, Tabuleiro } from '../models/model';
+import { Casa, Diagonal, Peca, Tabuleiro } from '../models/model';
 
 @Component({
   selector: 'app-tabuleiro',
@@ -8,7 +8,7 @@ import { Diagonal, Peca, Tabuleiro } from '../models/model';
 })
 export class TabuleiroComponent implements OnInit {
   tabuleiro: Tabuleiro = new Tabuleiro();
-  pecaSelecionada: Peca = null;
+  casaSelecionada: Casa = null;
   COR_BRANCA = '';
   COR_PRETA = '';
   vetor_diagonal_secundaria = [49, 49, 0];
@@ -26,8 +26,8 @@ export class TabuleiroComponent implements OnInit {
   }
   inicializaDiagonais() {
 
-    const diagonalPrincipal1 = new Diagonal(new Peca(false, 1, 8), new Peca(false, 8, 1));
-    const diagonalSecundaria1 = new Diagonal(new Peca(false, 1, 1), new Peca(false, 8, 8));
+    const diagonalPrincipal1 = new Diagonal(new Casa(null, false, 1, 8), new Casa(null, false, 8, 1));
+    const diagonalSecundaria1 = new Diagonal(new Casa(null, false, 1, 1), new Casa(null, false, 8, 8));
     this.digonais.push(diagonalPrincipal1);
     this.digonais.push(diagonalSecundaria1);
   }
@@ -36,13 +36,13 @@ export class TabuleiroComponent implements OnInit {
   }
 
   inicializaTabuleiro() {
-    this.tabuleiro.pecas = [];
+    this.tabuleiro.casas = [];
     for (let linha = 1; linha < 9; linha++) {
-      this.tabuleiro.pecas[linha] = [];
+      this.tabuleiro.casas[linha] = [];
       for (let coluna = 1; coluna < 9; coluna++) {
-        this.tabuleiro.pecas[linha][coluna] = new Peca();
-        this.tabuleiro.pecas[linha][coluna].linha = linha;
-        this.tabuleiro.pecas[linha][coluna].coluna = coluna;
+        this.tabuleiro.casas[linha][coluna] = new Casa();
+        this.tabuleiro.casas[linha][coluna].linha = linha;
+        this.tabuleiro.casas[linha][coluna].coluna = coluna;
       }
     }
   }
@@ -51,13 +51,13 @@ export class TabuleiroComponent implements OnInit {
 
       if (!this.ePositivo(linha)) {
         for (let coluna = 1; coluna < 9; coluna++) {
-          this.tabuleiro.pecas[linha][coluna].ePreto = this.ePositivo(coluna);
+          this.tabuleiro.casas[linha][coluna].ePreto = this.ePositivo(coluna);
         }
       }
 
       if (this.ePositivo(linha)) {
         for (let coluna = 1; coluna < 9; coluna++) {
-          this.tabuleiro.pecas[linha][coluna].ePreto = !this.ePositivo(coluna);
+          this.tabuleiro.casas[linha][coluna].ePreto = !this.ePositivo(coluna);
         }
       }
 
@@ -66,19 +66,15 @@ export class TabuleiroComponent implements OnInit {
   preencherPecasJogadores() {
     for (let linha = 1; linha < 4; linha++) {
       for (let coluna = 1; coluna < 9; coluna++) {
-        if (this.tabuleiro.pecas[linha][coluna].ePreto) {
-          this.tabuleiro.pecas[linha][coluna].valor = 2;
-          this.tabuleiro.pecas[linha][coluna].estaVazio = false;
-
+        if (this.tabuleiro.casas[linha][coluna].ePreto) {
+          this.tabuleiro.casas[linha][coluna].peca = new Peca(2);
         }
-
       }
     }
     for (let linha = 6; linha < 9; linha++) {
       for (let coluna = 1; coluna < 9; coluna++) {
-        if (this.tabuleiro.pecas[linha][coluna].ePreto) {
-          this.tabuleiro.pecas[linha][coluna].valor = 3;
-          this.tabuleiro.pecas[linha][coluna].estaVazio = false;
+        if (this.tabuleiro.casas[linha][coluna].ePreto) {
+          this.tabuleiro.casas[linha][coluna].peca = new Peca(3);
         }
       }
     }
@@ -87,23 +83,20 @@ export class TabuleiroComponent implements OnInit {
   indexandoPecas() {
     for (let linha = 1; linha < 9; linha++) {
       for (let coluna = 1; coluna < 9; coluna++) {
-        this.tabuleiro.pecas[linha][coluna].id = '' + linha + '' + coluna;
+        if (this.tabuleiro.casas[linha][coluna].peca) {
+          this.tabuleiro.casas[linha][coluna].peca.id = '' + linha + '' + coluna;
+        }
+
       }
     }
   }
 
-  capturaItem(peca: Peca) {
-    if (peca.estaVazio) return;
-    peca.selecionado = !peca.selecionado;
-    this.pecaSelecionada = peca;
-    for (let linha = 1; linha < 9; linha++) {
-      for (let coluna = 1; coluna < 9; coluna++) {
-        if (this.tabuleiro.pecas[linha][coluna].id != peca.id)
-          this.tabuleiro.pecas[linha][coluna].selecionado = false;
-      }
-    }
+  capturaItem(casa: Casa) {
+    if (casa.peca == null) return;
+    casa.selecionado = !casa.selecionado;
+    this.casaSelecionada = casa;
   }
-  obterVetor(origem: Peca, destino: Peca) {
+  obterVetor(origem: Casa, destino: Casa) {
     let vetor = [];
     const v1 = Math.pow(destino.coluna - origem.coluna, 2);
     const v2 = Math.pow(destino.linha - origem.linha, 2);
@@ -125,18 +118,23 @@ export class TabuleiroComponent implements OnInit {
     const v3 = a1 * b2 - a2 * b1;
     return v1 + v2 + v3;
   }
-  Ediagonal(origem: Peca, destino: Peca) {
-    const vet1 = this.obterVetor(origem,destino);
-
-    return this.calcDeterminante(vet1,this.vetor_diagonal_secundaria) == 0;
+  calcDistanciaEntrePontos(origem: Casa, destino: Casa): Number {
+    const origemX = origem.coluna;
+    const origemY = origem.linha;
+    const destinoX = destino.coluna;
+    const destinoY = destino.linha;
+    const result = Math.sqrt(Math.pow(destinoX - origemX, 2) + Math.pow(destinoY - origemY, 2));
+    return Math.trunc(result);
   }
-  moverPeca(destino: Peca) {
+  Ediagonal(origem: Casa, destino: Casa) {
+    const vet1 = this.obterVetor(origem, destino);
+    return this.calcDeterminante(vet1, this.vetor_diagonal_secundaria) == 0 && this.calcDistanciaEntrePontos(origem, destino) == 1;
+  }
+  moverPeca(destino: Casa) {
 
-    if (this.Ediagonal(this.pecaSelecionada, destino)) {
-      const linhaOrigem = this.pecaSelecionada.linha;
-      const colunaOrigem = this.pecaSelecionada.coluna;
-      this.tabuleiro.pecas[destino.linha][destino.coluna] = this.pecaSelecionada;
-      this.tabuleiro.pecas[linhaOrigem][colunaOrigem] = destino;
+    if (this.Ediagonal(this.casaSelecionada, destino)) {
+      destino.peca = Object.assign({}, this.casaSelecionada.peca);
+      this.casaSelecionada.peca = null;
     }
 
   }

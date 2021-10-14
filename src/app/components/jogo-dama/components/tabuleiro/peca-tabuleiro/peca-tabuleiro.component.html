@@ -1,21 +1,21 @@
 <button pButton type="button"
 
-(click)="capturaItem(tabuleiro.pecas[linha][coluna])"
-*ngIf="tabuleiro.pecas[linha][coluna].valor==2 && tabuleiro.pecas[linha][coluna].selecionado == false" class="p-button-raised p-button-rounded"></button>
+(click)="capturaItem(tabuleiro.casas[linha][coluna])"
+*ngIf="tabuleiro.casas[linha][coluna].peca && tabuleiro.casas[linha][coluna].peca.valor==2 && tabuleiro.casas[linha][coluna].selecionado == false" class="p-button-raised p-button-rounded"></button>
 <button pButton type="button"
 
-(click)="capturaItem(tabuleiro.pecas[linha][coluna])"
-*ngIf="tabuleiro.pecas[linha][coluna].valor==3 && tabuleiro.pecas[linha][coluna].selecionado == false"
+(click)="capturaItem(tabuleiro.casas[linha][coluna])"
+*ngIf="tabuleiro.casas[linha][coluna].peca && tabuleiro.casas[linha][coluna].peca.valor==3 && tabuleiro.casas[linha][coluna].selecionado == false"
 class="p-button-raised p-button-rounded p-button-danger"></button>
 
 <button pButton type="button"
-(click)="capturaItem(tabuleiro.pecas[linha][coluna])"
-*ngIf="tabuleiro.pecas[linha][coluna].selecionado == true && tabuleiro.pecas[linha][coluna].valor==3"
+(click)="capturaItem(tabuleiro.casas[linha][coluna])"
+*ngIf="tabuleiro.casas[linha][coluna].selecionado == true && tabuleiro.casas[linha][coluna].peca && tabuleiro.casas[linha][coluna].peca.valor==3"
 class="p-button-raised p-button-rounded p-button-help"></button>
 
 <button pButton type="button"
-(click)="capturaItem(tabuleiro.pecas[linha][coluna])"
-*ngIf="tabuleiro.pecas[linha][coluna].selecionado == true && tabuleiro.pecas[linha][coluna].valor==2"
+(click)="capturaItem(tabuleiro.casas[linha][coluna])"
+*ngIf="tabuleiro.casas[linha][coluna].selecionado == true && tabuleiro.casas[linha][coluna].peca && tabuleiro.casas[linha][coluna].peca.valor==2"
 class="p-button-raised p-button-rounded p-button-warning"></button>
 
-<button pButton type="button" *ngIf="tabuleiro.pecas[linha][coluna].valor==1" (click)="moverItem(tabuleiro.pecas[linha][coluna])" style="opacity: 0;"></button>
+<button pButton type="button" *ngIf="tabuleiro.casas[linha][coluna].peca == null" (click)="moverItem(tabuleiro.casas[linha][coluna])" style="opacity: 0;"></button>
