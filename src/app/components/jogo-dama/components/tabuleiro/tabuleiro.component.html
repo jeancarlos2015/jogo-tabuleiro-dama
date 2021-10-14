@@ -1,1 +1,44 @@
-<p>tabuleiro works!</p>
+<div class="p-grid">
+  <div class="p-col-2"></div>
+  <div class="p-col-8 ">
+    <div class="p-grid">
+
+      <div class="p-col-12 ">
+
+        <p-panel>
+          <!-- <ng-template pTemplate="header">
+            <strong style="margin-left: 40%;">Jogo de Dama</strong>
+          </ng-template> -->
+          <div class="tabuleiro">
+            <p-table [style]="{height: '500px'}" [value]="linhas" styleClass="p-datatable-gridlines"
+              responsiveLayout="scroll">
+
+              <ng-template pTemplate="body" let-linha>
+                <tr>
+                  <td *ngFor="let coluna of colunas"
+                    [ngClass]="{celulaBranca: !tabuleiro.pecas[linha][coluna].ePreto, celulaPreta: tabuleiro.pecas[linha][coluna].ePreto}">
+
+                    <app-peca-tabuleiro [tabuleiro]="tabuleiro" [linha]="linha" [coluna]="coluna"
+                      (selecionarItemEvento)="moverPeca($event)" (selecionarItemEvento)="capturaItem($event)">
+                    </app-peca-tabuleiro>
+                  </td>
+                </tr>
+
+
+              </ng-template>
+
+            </p-table>
+          </div>
+
+
+
+
+
+        </p-panel>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="p-col-2"></div>
+</div>

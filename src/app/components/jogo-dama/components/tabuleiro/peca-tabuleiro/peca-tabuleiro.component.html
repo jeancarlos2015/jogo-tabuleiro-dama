@@ -1,0 +1,18 @@
+<button pButton type="button"
+
+(click)="capturaItem(tabuleiro.pecas[linha][coluna])"
+*ngIf="tabuleiro.pecas[linha][coluna].valor==2 && tabuleiro.pecas[linha][coluna].selecionado == false" class="p-button-raised p-button-rounded"></button>
+<button pButton type="button"
+
+(click)="capturaItem(tabuleiro.pecas[linha][coluna])"
+*ngIf="tabuleiro.pecas[linha][coluna].valor==3 && tabuleiro.pecas[linha][coluna].selecionado == false"
+class="p-button-raised p-button-rounded p-button-danger"></button>
+<button pButton type="button"
+
+(click)="capturaItem(tabuleiro.pecas[linha][coluna])"
+*ngIf="tabuleiro.pecas[linha][coluna].selecionado == true"
+class="p-button-raised p-button-rounded p-button-help"></button>
+
+<button pButton type="button"
+
+(click)="capturaItem(tabuleiro.pecas[linha][coluna])" style="opacity: 0;"></button>

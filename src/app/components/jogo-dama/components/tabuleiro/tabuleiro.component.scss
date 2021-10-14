@@ -1,0 +1,33 @@
+// :host ::ng-deep .p-panel .p-panel-header .p-panel-title {
+//   font-weight: 600;
+//   text-align: center;
+// }
+
+.tabuleiro {
+  zoom: 60%;
+  margin-left: 20%;
+  width: 60%;
+}
+
+.celulaPreta {
+  background-color: black;
+  color: white;
+}
+.celulaBranca{
+  background-color: white;
+  color: black;
+}
+.celulaBranca:hover{
+  background-color: green;
+}
+.celulaPreta:hover{
+  background-color: gray;
+}
+td{
+  height: 90px !important;
+  width: 30px !important;
+}
+
+:host ::ng-deep .p-panel-content{
+  height: 550px;
+}
