@@ -1,7 +1,6 @@
-import { environment } from './../../../../../../environments/environment.prod';
+import { environment } from './../../../../../../environments/environment';
 import { Tabuleiro, Peca } from './../../models/model';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-peca-tabuleiro',
