@@ -1,22 +1,7 @@
 
 
-.celulaPreta {
-  background-color: black;
-  color: white;
-}
-.celulaBranca{
-  background-color: white;
-  color: black;
-}
-.celulaBranca:hover{
-  background-color: green;
-}
-.celulaPreta:hover{
-  background-color: gray;
-}
-
 button{
-  width: 80px;
+  width: 80px !important;
   height: 80px;
-  margin-left: 15%;
+  margin-left: 25px;
 }
