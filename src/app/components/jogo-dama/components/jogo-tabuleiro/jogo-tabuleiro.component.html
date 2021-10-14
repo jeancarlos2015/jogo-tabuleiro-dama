@@ -1,0 +1,38 @@
+<p-megaMenu [model]="items"></p-megaMenu>
+<table style="width: 100%;">
+  <tr>
+    <td style="width: 8%;">
+      <strong>Jogador 1</strong>
+      <ul style="width: 100%;">
+        <li *ngFor="let item of [1,2,3,4]"> Peça {{ item }}</li>
+      </ul>
+    </td>
+    <td style="width: 2%;">&nbsp;</td>
+    <td style="width: 8%;">
+      <strong>Jogador 2</strong>
+      <ul style="width: 100%;">
+        <li *ngFor="let item of [1,2,3,4]"> Peça {{ item }}</li>
+      </ul>
+    </td>
+    <td style="width: auto;zoom: 90%;">
+      <app-tabuleiro (pecasJogador1CapturadasEvento)="capturaPecasAdversario1($event)"
+        (pecasJogador2CapturadasEvento)="capturaPecasAdversario2($event)"></app-tabuleiro>
+
+    </td>
+    <td style="width: 20%;">
+      <ul>
+        <li>Jogador 1:
+          <ul>
+            <li>Capturas:0</li>
+          </ul>
+        </li>
+        <li>Jogador 2:
+
+          <ul>
+            <li>Capturas:0</li>
+          </ul>
+        </li>
+      </ul>
+    </td>
+  </tr>
+</table>

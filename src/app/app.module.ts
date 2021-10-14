@@ -17,7 +17,6 @@ import {MessageService} from 'primeng/api';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MegaMenuModule,
     ToastModule,
     AppRoutingModule,
     JogoDamaRoutingModule,

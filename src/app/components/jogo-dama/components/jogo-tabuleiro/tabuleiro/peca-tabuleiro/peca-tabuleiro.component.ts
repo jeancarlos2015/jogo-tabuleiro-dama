@@ -1,5 +1,5 @@
-import { environment } from './../../../../../../environments/environment';
-import { Tabuleiro, Peca, Casa } from './../../models/model';
+import { environment } from '../../../../../../../environments/environment';
+import { Tabuleiro, Peca, Casa } from '../../../models/model';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({

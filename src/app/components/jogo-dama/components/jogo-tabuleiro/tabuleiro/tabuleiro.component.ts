@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Casa, Diagonal, Peca, Tabuleiro } from '../models/model';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
+import { Casa, Diagonal, Peca, Tabuleiro } from '../../models/model';
 
 @Component({
   selector: 'app-tabuleiro',
@@ -15,7 +16,10 @@ export class TabuleiroComponent implements OnInit {
   linhas = [1, 2, 3, 4, 5, 6, 7, 8];
   colunas = [1, 2, 3, 4, 5, 6, 7, 8];
   digonais: Diagonal[] = [];
-
+  pecasJogador1CapturadasEvento = new EventEmitter<Peca[]>();
+  pecasJogador2CapturadasEvento = new EventEmitter<Peca[]>();
+  pecasJogador2Capturadas: Peca[] = [];
+  pecasJogador1Capturadas: Peca[] = [];
   constructor() { }
 
   ngOnInit(): void {
@@ -191,8 +195,18 @@ export class TabuleiroComponent implements OnInit {
 
     const capturado = this.obterCasa(this.casaSelecionada);
     if (capturado && capturado.peca) {
+      if (capturado.peca.valor == 2) {
+        this.pecasJogador1Capturadas.push(capturado.peca);
+        this.pecasJogador1CapturadasEvento.emit(this.pecasJogador1Capturadas);
+      }
+      if (capturado.peca.valor == 3) {
+        this.pecasJogador2Capturadas.push(capturado.peca);
+        this.pecasJogador2CapturadasEvento.emit(this.pecasJogador2Capturadas);
+      }
       capturado.peca = null;
       capturado.selecionado = false;
     }
   }
+
+
 }
