@@ -5,8 +5,12 @@ export class Peca {
   id;
   selecionado = false;
   estaVazio = true;
-  constructor(ePreto = false) {
+  linha = 1;
+  coluna = 1;
+  constructor(ePreto = false,linha=1,coluna=1) {
     this.ePreto = ePreto;
+    this.linha = linha;
+    this.coluna = coluna;
   }
 }
 export class Casa {

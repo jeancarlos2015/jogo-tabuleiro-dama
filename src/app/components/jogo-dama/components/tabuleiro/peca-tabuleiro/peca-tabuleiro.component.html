@@ -13,4 +13,4 @@ class="p-button-raised p-button-rounded p-button-danger"></button>
 *ngIf="tabuleiro.pecas[linha][coluna].selecionado == true"
 class="p-button-raised p-button-rounded p-button-help"></button>
 
-<button pButton type="button" *ngIf="tabuleiro.pecas[linha][coluna].valor==1" (click)="capturaItem(tabuleiro.pecas[linha][coluna])" style="opacity: 0;"></button>
+<button pButton type="button" *ngIf="tabuleiro.pecas[linha][coluna].valor==1" (click)="moverItem(tabuleiro.pecas[linha][coluna])" style="opacity: 0;"></button>

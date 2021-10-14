@@ -19,7 +19,7 @@
                     [ngClass]="{celulaBranca: !tabuleiro.pecas[linha][coluna].ePreto, celulaPreta: tabuleiro.pecas[linha][coluna].ePreto}">
 
                     <app-peca-tabuleiro [tabuleiro]="tabuleiro" [linha]="linha" [coluna]="coluna"
-                      (selecionarItemEvento)="moverPeca($event)" (selecionarItemEvento)="capturaItem($event)">
+                      (moverItemEvento)="moverPeca($event)" (selecionarItemEvento)="capturaItem($event)">
                     </app-peca-tabuleiro>
                   </td>
                 </tr>

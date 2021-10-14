@@ -13,6 +13,7 @@ export class PecaTabuleiroComponent implements OnInit {
   @Input() linha = 1;
   @Input() coluna = 1;
   @Output() selecionarItemEvento = new EventEmitter<Peca>();
+  @Output() moverItemEvento = new EventEmitter<Peca>();
 
   constructor() { }
 
@@ -22,7 +23,11 @@ export class PecaTabuleiroComponent implements OnInit {
 
 
 
-  capturaItem(peca: Peca){
+  capturaItem(peca: Peca) {
     this.selecionarItemEvento.emit(peca);
+  }
+
+  moverItem(peca: Peca) {
+    this.moverItemEvento.emit(peca);
   }
 }

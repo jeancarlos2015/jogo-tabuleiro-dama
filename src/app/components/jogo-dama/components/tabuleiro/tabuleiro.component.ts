@@ -32,6 +32,8 @@ export class TabuleiroComponent implements OnInit {
       this.tabuleiro.pecas[linha] = [];
       for (let coluna = 1; coluna < 9; coluna++) {
         this.tabuleiro.pecas[linha][coluna] = new Peca();
+        this.tabuleiro.pecas[linha][coluna].linha = linha;
+        this.tabuleiro.pecas[linha][coluna].coluna = coluna;
       }
     }
   }
@@ -58,6 +60,7 @@ export class TabuleiroComponent implements OnInit {
         if (this.tabuleiro.pecas[linha][coluna].ePreto) {
           this.tabuleiro.pecas[linha][coluna].valor = 2;
           this.tabuleiro.pecas[linha][coluna].estaVazio = false;
+
         }
 
       }
@@ -108,17 +111,9 @@ export class TabuleiroComponent implements OnInit {
   }
   moverPeca(destino: Peca) {
 
-    if (destino == null) return;
-    if (!destino.estaVazio) return;
-    if(this.pecaSelecionada == null) return;
-    const destinoCP = Object.assign({},destino);
-    const selecionado = Object.assign({},this.pecaSelecionada);
-    const colunaDestino = this.getIndex(destino);
-    const linhaDestino = this.getLinha(destino);
-    const colunaSelecionado = this.getIndex(this.pecaSelecionada);
-    const linhaSelecionado = this.getLinha(this.pecaSelecionada);
-    this.tabuleiro.pecas[linhaDestino][colunaDestino] = selecionado;
-    this.tabuleiro.pecas[linhaSelecionado][colunaSelecionado] = destinoCP;
-    this.pecaSelecionada = null;
+    const linhaOrigem = this.pecaSelecionada.linha;
+    const colunaOrigem = this.pecaSelecionada.coluna;
+    this.tabuleiro.pecas[destino.linha][destino.coluna] = this.pecaSelecionada;
+    this.tabuleiro.pecas[linhaOrigem][colunaOrigem] = destino;
   }
 }
