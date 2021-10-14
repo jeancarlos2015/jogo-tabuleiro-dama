@@ -1,9 +1,7 @@
 export class Peca {
   valor = 1;
-  id;
-  constructor(valor = 1, id = 1) {
+  constructor(valor = 1) {
     this.valor = valor;
-    this.id = id;
   }
 }
 export class Casa {
@@ -12,6 +10,7 @@ export class Casa {
   linha;
   coluna;
   valor=1;
+  id;
   selecionado = false;
   constructor(peca: Peca = null, ePreto = false, linha = 1, coluna = 1) {
     this.peca = peca;

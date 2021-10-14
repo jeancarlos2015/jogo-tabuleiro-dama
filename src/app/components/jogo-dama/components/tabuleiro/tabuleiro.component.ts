@@ -15,6 +15,7 @@ export class TabuleiroComponent implements OnInit {
   linhas = [1, 2, 3, 4, 5, 6, 7, 8];
   colunas = [1, 2, 3, 4, 5, 6, 7, 8];
   digonais: Diagonal[] = [];
+
   constructor() { }
 
   ngOnInit(): void {
@@ -84,7 +85,7 @@ export class TabuleiroComponent implements OnInit {
     for (let linha = 1; linha < 9; linha++) {
       for (let coluna = 1; coluna < 9; coluna++) {
         if (this.tabuleiro.casas[linha][coluna].peca) {
-          this.tabuleiro.casas[linha][coluna].peca.id = '' + linha + '' + coluna;
+          this.tabuleiro.casas[linha][coluna].id = '' + linha + '' + coluna;
         }
 
       }
@@ -118,7 +119,7 @@ export class TabuleiroComponent implements OnInit {
     const v3 = a1 * b2 - a2 * b1;
     return v1 + v2 + v3;
   }
-  calcDistanciaEntrePontos(origem: Casa, destino: Casa): Number {
+  calcModuloDistanciaEntrePontos(origem: Casa, destino: Casa): Number {
     const origemX = origem.coluna;
     const origemY = origem.linha;
     const destinoX = destino.coluna;
@@ -126,16 +127,72 @@ export class TabuleiroComponent implements OnInit {
     const result = Math.sqrt(Math.pow(destinoX - origemX, 2) + Math.pow(destinoY - origemY, 2));
     return Math.trunc(result);
   }
-  Ediagonal(origem: Casa, destino: Casa) {
+  calcDistanciaEntrePontos(origem: Casa, destino: Casa): Number {
+    const origemX = origem.coluna;
+    const origemY = origem.linha;
+    const destinoX = destino.coluna;
+    const destinoY = destino.linha;
+    const result = (destinoX - origemX) + (destinoY - origemY);
+    return Math.trunc(result);
+  }
+  ediagonal(origem: Casa, destino: Casa) {
     const vet1 = this.obterVetor(origem, destino);
-    return this.calcDeterminante(vet1, this.vetor_diagonal_secundaria) == 0 && this.calcDistanciaEntrePontos(origem, destino) == 1;
+    return this.calcDeterminante(vet1, this.vetor_diagonal_secundaria) == 0 && this.calcModuloDistanciaEntrePontos(origem, destino) == 1;
+  }
+  ediagonalCaptura(origem: Casa, destino: Casa) {
+    const vet1 = this.obterVetor(origem, destino);
+    return this.calcDeterminante(vet1, this.vetor_diagonal_secundaria) == 0 && this.calcModuloDistanciaEntrePontos(origem, destino) == 2;
+  }
+  podeCapturar(origem: Casa, destino: Casa) {
+    const arrayCasas: Casa[] = [];
+    for (let linha = 1; linha < 9; linha++) {
+      for (let coluna = 1; coluna < 9; coluna++) {
+        const casa = this.tabuleiro.casas[linha][coluna];
+        if (this.calcDistanciaEntrePontos(origem, casa) == 1) {
+          arrayCasas.push(casa);
+        }
+      }
+
+    }
+    return arrayCasas.filter(c => c.id == destino.id).length > 0 && origem.valor != destino.valor;
+
+  }
+  obterCasa(origem: Casa) {
+    for (let linha = 1; linha < 9; linha++) {
+      for (let coluna = 1; coluna < 9; coluna++) {
+        const casa = this.tabuleiro.casas[linha][coluna];
+        if (this.calcModuloDistanciaEntrePontos(origem, casa) == 1 && casa.peca) {
+          if (casa.peca.valor != origem.peca.valor) {
+            return casa;
+          }
+
+        }
+      }
+    }
+    return null;
+  }
+  moverAux(destino: Casa) {
+    destino.peca = Object.assign({}, this.casaSelecionada.peca);
+    this.casaSelecionada.peca = null;
   }
   moverPeca(destino: Casa) {
+    if (destino == null) return;
     if (destino.peca) return;
-    if (this.Ediagonal(this.casaSelecionada, destino)) {
-      destino.peca = Object.assign({}, this.casaSelecionada.peca);
-      this.casaSelecionada.peca = null;
-    }
 
+    if (this.ediagonal(this.casaSelecionada, destino)) {
+      this.moverAux(destino);
+    } else if (this.ediagonalCaptura(this.casaSelecionada, destino)) {
+      this.captura();
+      this.moverAux(destino);
+    }
+  }
+
+  captura() {
+
+    const capturado = this.obterCasa(this.casaSelecionada);
+    if (capturado && capturado.peca) {
+      capturado.peca = null;
+      capturado.selecionado = false;
+    }
   }
 }
