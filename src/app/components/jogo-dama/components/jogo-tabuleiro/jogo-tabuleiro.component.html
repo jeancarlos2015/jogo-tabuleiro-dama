@@ -7,25 +7,36 @@
     </td>
     <td style="width: auto;">
       <p-panel>
-        <ng-template  pTemplate="header">
+        <ng-template pTemplate="header">
           <table style="width: 100%;">
             <tr>
-              <td>Jogador 2: Fulano</td>
+              <td *ngIf="jogador.valor == adversario.valor else naoEaVezAdversario">
+
+               <strong>Adversário: {{ adversario.nick }}</strong>
+              </td>
+              <ng-template #naoEaVezAdversario>
+                <td>Adversário: {{ adversario.nick }}</td>
+              </ng-template>
               <td style="width: 33%;"></td>
-              <td>Jogadas: {{ qtPecasCapturadasJogador2 }}</td>
+              <td>Jogadas: {{ adversario.jogadas }}</td>
             </tr>
           </table>
 
         </ng-template>
         <div style="zoom: 90%;">
-          <app-tabuleiro></app-tabuleiro>
+          <app-tabuleiro [jogador]="jogador" [desafiante]="desafiante" [adversario]="adversario"></app-tabuleiro>
         </div>
         <ng-template pTemplate="footer">
           <table style="width: 100%;">
             <tr>
-              <td>Jogador 1: Fulano</td>
+              <td *ngIf="jogador.valor == desafiante.valor else naoEaVezDesafiante">
+              <strong>Desafiante: {{ desafiante.nick }}</strong>
+              </td>
+              <ng-template #naoEaVezDesafiante>
+                <td>Desafiante: {{ desafiante.nick }}</td>
+              </ng-template>
               <td style="width: 33%;"></td>
-              <td>Jogadas: {{ qtPecasCapturadasJogador1 }}</td>
+              <td>Jogadas: {{ desafiante.jogadas }}</td>
             </tr>
           </table>
         </ng-template>

@@ -1,7 +1,7 @@
 import { JogoTabuleiroService } from './jogo-tabuleiro.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MegaMenuItem, MessageService } from 'primeng/api';
-import { Peca } from '../models/model';
+import { Adversario, Desafiante, Jogador, Peca } from '../models/model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,7 +13,9 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
   items: MegaMenuItem[];
   pecasJogador2Capturadas: Peca[] = [];
   pecasJogador1Capturadas: Peca[] = [];
-  eJogador1 = true;
+  jogador: Jogador = new Desafiante('Jean');
+  desafiante: Desafiante = new Desafiante('Jean');
+  adversario: Adversario = new Adversario('Computador');
   qtPecasCapturadasJogador1 = 0;
   qtPecasCapturadasJogador2 = 0;
   pecaAtualJogador1: Peca = null;
@@ -33,6 +35,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     this.capturaPecasAdversario2();
     this.capturaPecaAtualAdversario2();
     this.capturaPecaAtualAdversario1();
+    this.capturaJogador();
   }
 
   inicializaMenu() {
@@ -83,7 +86,14 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
       }
     ];
   }
-
+  capturaJogador() {
+    let instancia = this.servico.notificaJogadorJogada.subscribe(
+      (jogador) => {
+        this.jogador = jogador;
+      }
+    )
+    this.subscriptions.push(instancia);
+  }
   mostrarMensagem(detail, summary, serverity) {
     this.messageService.add({ severity: serverity, summary: summary, detail: detail });
   }

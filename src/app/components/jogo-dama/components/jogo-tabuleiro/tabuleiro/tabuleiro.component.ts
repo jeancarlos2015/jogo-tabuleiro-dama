@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Casa, Diagonal, Peca, Tabuleiro } from '../../models/model';
+import { Component, Input, OnInit } from '@angular/core';
+import { Adversario, Casa, Desafiante, Diagonal, Jogador, Peca, Tabuleiro } from '../../models/model';
 import { JogoTabuleiroService } from './../jogo-tabuleiro.service';
 
 
@@ -13,18 +13,20 @@ export class TabuleiroComponent implements OnInit {
   casaSelecionada: Casa = null;
   COR_BRANCA = '';
   COR_PRETA = '';
-  vetor_diagonal_secundaria = [49, 49, 0];
+  vetor_diagonal = [49, 49, 0];
   linhas = [1, 2, 3, 4, 5, 6, 7, 8];
   colunas = [1, 2, 3, 4, 5, 6, 7, 8];
   digonais: Diagonal[] = [];
-
+  ciclo = 1;
   pecasJogador2Capturadas: Peca[] = [];
   pecasJogador1Capturadas: Peca[] = [];
-
+  @Input() jogador: Jogador = null;
+  @Input() desafiante: Jogador = new Desafiante();
+  @Input() adversario: Jogador = new Adversario();
 
   constructor(private servico: JogoTabuleiroService) {
 
-   }
+  }
 
   ngOnInit(): void {
     this.inicializaTabuleiro();
@@ -111,6 +113,7 @@ export class TabuleiroComponent implements OnInit {
       this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
     }
   }
+  // Obtém o vetor entre dois pontos.
   obterVetor(origem: Casa, destino: Casa) {
     let vetor = [];
     const v1 = Math.pow(destino.coluna - origem.coluna, 2);
@@ -120,7 +123,8 @@ export class TabuleiroComponent implements OnInit {
     vetor.push(0); // z
     return vetor;
   }
-  calcDeterminante(vetor1 = [], vetor2 = []) {
+  // Verifica se dois vetores são paralelos.
+  eParalelo(vetor1 = [], vetor2 = []) {
     const a1 = vetor1[0];
     const b1 = vetor2[0];
     const a2 = vetor1[1];
@@ -131,8 +135,10 @@ export class TabuleiroComponent implements OnInit {
     const v1 = a2 * b3 - a3 * b2;
     const v2 = a3 * b1 - a1 * b3;
     const v3 = a1 * b2 - a2 * b1;
-    return v1 + v2 + v3;
+    return (v1 + v2 + v3) == 0;
   }
+
+  // Calcula o módulo da distância entre dois pontos.
   calcModuloDistanciaEntrePontos(origem: Casa, destino: Casa): Number {
     const origemX = origem.coluna;
     const origemY = origem.linha;
@@ -141,6 +147,8 @@ export class TabuleiroComponent implements OnInit {
     const result = Math.sqrt(Math.pow(destinoX - origemX, 2) + Math.pow(destinoY - origemY, 2));
     return Math.trunc(result);
   }
+
+  // Calcula a distância entre dois pontos.
   calcDistanciaEntrePontos(origem: Casa, destino: Casa): Number {
     const origemX = origem.coluna;
     const origemY = origem.linha;
@@ -151,11 +159,11 @@ export class TabuleiroComponent implements OnInit {
   }
   ediagonal(origem: Casa, destino: Casa) {
     const vet1 = this.obterVetor(origem, destino);
-    return this.calcDeterminante(vet1, this.vetor_diagonal_secundaria) == 0 && this.calcModuloDistanciaEntrePontos(origem, destino) == 1;
+    return this.eParalelo(vet1, this.vetor_diagonal) && this.calcModuloDistanciaEntrePontos(origem, destino) == 1;
   }
   ediagonalCaptura(origem: Casa, destino: Casa) {
     const vet1 = this.obterVetor(origem, destino);
-    return this.calcDeterminante(vet1, this.vetor_diagonal_secundaria) == 0 && this.calcModuloDistanciaEntrePontos(origem, destino) == 2;
+    return this.eParalelo(vet1, this.vetor_diagonal) && this.calcModuloDistanciaEntrePontos(origem, destino) == 2;
   }
   podeCapturar(origem: Casa, destino: Casa) {
     const arrayCasas: Casa[] = [];
@@ -185,7 +193,10 @@ export class TabuleiroComponent implements OnInit {
     }
     return null;
   }
-  moverAux(destino: Casa) {
+  eJogadorDesafiante() {
+    return Math.pow(-1, this.ciclo) < 0;
+  }
+  mover(destino: Casa) {
     destino.peca = Object.assign({}, this.casaSelecionada.peca);
     this.casaSelecionada.peca = null;
     if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 3) {
@@ -194,37 +205,69 @@ export class TabuleiroComponent implements OnInit {
     if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 2) {
       this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
     }
-  }
-  moverPeca(destino: Casa) {
-    if (destino == null) return;
-    if (destino.peca) return;
 
-    if (this.ediagonal(this.casaSelecionada, destino)) {
-      this.moverAux(destino);
-    } else if (this.ediagonalCaptura(this.casaSelecionada, destino)) {
-      this.captura();
-      this.moverAux(destino);
+  }
+  moverPecaJogadorAdversario(destino: Casa) {
+    if (this.jogador instanceof Adversario) {
+      if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == this.jogador.valor) {
+        if (this.ediagonal(this.casaSelecionada, destino)) {
+          this.mover(destino);
+        } else if (this.ediagonalCaptura(this.casaSelecionada, destino)) {
+          this.capturar();
+          this.mover(destino);
+        }
+
+      }
     }
   }
+  moverPecaJogadorDesafiante(destino: Casa) {
+    if (this.jogador instanceof Desafiante) {
+      console.log(this.casaSelecionada);
+      console.log(this.jogador);
+      if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == this.jogador.valor) {
+        if (this.ediagonal(this.casaSelecionada, destino)) {
+          this.mover(destino);
+        } else if (this.ediagonalCaptura(this.casaSelecionada, destino)) {
+          this.capturar();
+          this.mover(destino);
+        }
+      }
+    }
+  }
+  moverPeca(destino: Casa) {
+    if (this.jogador == null) return;
+    if (destino == null) return;
+    if (destino.peca) return;
+    this.moverPecaJogadorAdversario(destino);
+    this.moverPecaJogadorDesafiante(destino);
+    this.jogador = this.eJogadorDesafiante() ? Object.assign({}, this.desafiante) : Object.assign({}, this.adversario);
+    this.jogador.jogadas++;
+    this.servico.notificaJogadorJogada.emit(this.jogador);
 
-  captura() {
+    this.ciclo++;
+
+  }
+  informarCaptura(capturado: Casa) {
+    if (capturado.peca.valor == 2) {
+      this.pecasJogador1Capturadas.push(capturado.peca);
+      this.servico.pecasJogador1CapturadasEvento.emit(this.pecasJogador1Capturadas);
+    }
+    if (capturado.peca.valor == 3) {
+      this.pecasJogador2Capturadas.push(capturado.peca);
+      this.servico.pecasJogador2CapturadasEvento.emit(this.pecasJogador2Capturadas);
+    }
+    if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 3) {
+      this.servico.pecaAtualJogador2Evento.emit(this.casaSelecionada);
+    }
+    if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 2) {
+      this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
+    }
+  }
+  capturar() {
 
     const capturado = this.obterCasa(this.casaSelecionada);
     if (capturado && capturado.peca) {
-      if (capturado.peca.valor == 2) {
-        this.pecasJogador1Capturadas.push(capturado.peca);
-        this.servico.pecasJogador1CapturadasEvento.emit(this.pecasJogador1Capturadas);
-      }
-      if (capturado.peca.valor == 3) {
-        this.pecasJogador2Capturadas.push(capturado.peca);
-        this.servico.pecasJogador2CapturadasEvento.emit(this.pecasJogador2Capturadas);
-      }
-      if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 3) {
-        this.servico.pecaAtualJogador2Evento.emit(this.casaSelecionada);
-      }
-      if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 2) {
-        this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
-      }
+      this.informarCaptura(capturado);
       capturado.peca = null;
       capturado.selecionado = false;
     }

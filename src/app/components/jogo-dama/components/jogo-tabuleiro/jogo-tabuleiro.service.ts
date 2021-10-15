@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Peca } from '../models/model';
+import { Jogador, Peca } from '../models/model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,7 @@ export class JogoTabuleiroService {
   public pecaAtualJogador2Evento = new EventEmitter<Peca>();
   public pecasJogador1CapturadasEvento = new EventEmitter<Peca[]>();
   public pecasJogador2CapturadasEvento = new EventEmitter<Peca[]>();
+  public notificaJogadorJogada = new EventEmitter<Jogador>();
   constructor() { }
 
   // pecaAtualJogador1EventoMetodo(peca: Peca) {
