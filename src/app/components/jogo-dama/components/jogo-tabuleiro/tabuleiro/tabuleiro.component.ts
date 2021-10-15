@@ -1,6 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 import { Casa, Diagonal, Peca, Tabuleiro } from '../../models/model';
+import { JogoTabuleiroService } from './../jogo-tabuleiro.service';
+
 
 @Component({
   selector: 'app-tabuleiro',
@@ -16,11 +17,14 @@ export class TabuleiroComponent implements OnInit {
   linhas = [1, 2, 3, 4, 5, 6, 7, 8];
   colunas = [1, 2, 3, 4, 5, 6, 7, 8];
   digonais: Diagonal[] = [];
-  pecasJogador1CapturadasEvento = new EventEmitter<Peca[]>();
-  pecasJogador2CapturadasEvento = new EventEmitter<Peca[]>();
+
   pecasJogador2Capturadas: Peca[] = [];
   pecasJogador1Capturadas: Peca[] = [];
-  constructor() { }
+
+
+  constructor(private servico: JogoTabuleiroService) {
+
+   }
 
   ngOnInit(): void {
     this.inicializaTabuleiro();
@@ -100,6 +104,12 @@ export class TabuleiroComponent implements OnInit {
     if (casa.peca == null) return;
     casa.selecionado = !casa.selecionado;
     this.casaSelecionada = casa;
+    if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 3) {
+      this.servico.pecaAtualJogador2Evento.emit(this.casaSelecionada);
+    }
+    if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 2) {
+      this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
+    }
   }
   obterVetor(origem: Casa, destino: Casa) {
     let vetor = [];
@@ -178,6 +188,12 @@ export class TabuleiroComponent implements OnInit {
   moverAux(destino: Casa) {
     destino.peca = Object.assign({}, this.casaSelecionada.peca);
     this.casaSelecionada.peca = null;
+    if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 3) {
+      this.servico.pecaAtualJogador2Evento.emit(this.casaSelecionada);
+    }
+    if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 2) {
+      this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
+    }
   }
   moverPeca(destino: Casa) {
     if (destino == null) return;
@@ -197,11 +213,17 @@ export class TabuleiroComponent implements OnInit {
     if (capturado && capturado.peca) {
       if (capturado.peca.valor == 2) {
         this.pecasJogador1Capturadas.push(capturado.peca);
-        this.pecasJogador1CapturadasEvento.emit(this.pecasJogador1Capturadas);
+        this.servico.pecasJogador1CapturadasEvento.emit(this.pecasJogador1Capturadas);
       }
       if (capturado.peca.valor == 3) {
         this.pecasJogador2Capturadas.push(capturado.peca);
-        this.pecasJogador2CapturadasEvento.emit(this.pecasJogador2Capturadas);
+        this.servico.pecasJogador2CapturadasEvento.emit(this.pecasJogador2Capturadas);
+      }
+      if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 3) {
+        this.servico.pecaAtualJogador2Evento.emit(this.casaSelecionada);
+      }
+      if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 2) {
+        this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
       }
       capturado.peca = null;
       capturado.selecionado = false;

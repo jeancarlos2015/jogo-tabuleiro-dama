@@ -10,6 +10,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MegaMenuModule} from 'primeng/megamenu';
 import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
+import { JogoTabuleiroService } from './components/jogo-dama/components/jogo-tabuleiro/jogo-tabuleiro.service';
 @NgModule({
   declarations: [
     AppComponent
@@ -22,7 +23,7 @@ import {MessageService} from 'primeng/api';
     JogoDamaRoutingModule,
     JogoDamaModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService,JogoTabuleiroService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
