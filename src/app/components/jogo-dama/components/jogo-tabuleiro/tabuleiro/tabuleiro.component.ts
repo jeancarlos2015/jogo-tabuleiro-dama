@@ -102,7 +102,7 @@ export class TabuleiroComponent implements OnInit {
     }
   }
 
-  capturaItem(casa: Casa) {
+  selecionarCasa(casa: Casa) {
     if (casa.peca == null) return;
 
 
@@ -121,6 +121,14 @@ export class TabuleiroComponent implements OnInit {
     if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 2) {
       this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
     }
+
+    this.tabuleiro.casas.forEach( vetCasas => {
+      vetCasas.forEach( casa => {
+        if(casa.selecionado){
+          casa.selecionado = casa.id == this.casaSelecionada.id;
+        }
+      })
+    })
   }
   // Obtém o vetor entre dois pontos.
   obterVetor(origem: Casa, destino: Casa) {
