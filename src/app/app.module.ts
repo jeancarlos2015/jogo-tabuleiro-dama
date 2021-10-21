@@ -1,3 +1,5 @@
+import { CadastroJogadorModule } from './components/jogo-dama/components/cadastro-jogador/cadastro-jogador.module';
+import { CadastroJogadorRoutingModule } from './components/jogo-dama/components/cadastro-jogador/cadastro-jogador-routing.module';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,6 +25,7 @@ import { ExibeMensagensService } from './components/jogo-dama/components/jogo-ta
     AppRoutingModule,
     JogoDamaRoutingModule,
     JogoDamaModule,
+
   ],
   providers: [MessageService,JogoTabuleiroService,ExibeMensagensService],
   bootstrap: [AppComponent]

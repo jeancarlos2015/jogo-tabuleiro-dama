@@ -24,6 +24,7 @@ export class TabuleiroComponent implements OnInit {
   @Input() jogador: Jogador = null;
   @Input() desafiante: Jogador = null;
   @Input() adversario: Jogador = null;
+  bloquearJogadaParaCaptura: boolean;
 
   constructor(
     private servico: JogoTabuleiroService,
@@ -108,7 +109,6 @@ export class TabuleiroComponent implements OnInit {
 
   selecionarCasa(casa: Casa) {
     if (casa.peca == null) return;
-
     if (casa.peca) {
       this.mensagemService.mostrarMensagemAtencao(casa.peca.valor != this.jogador.valor, 'É a vez do jogador :' + this.jogador.nick);
       casa.selecionado = casa.peca.valor == this.jogador.valor;
@@ -201,16 +201,37 @@ export class TabuleiroComponent implements OnInit {
     return arrayCasas.filter(c => c.id == destino.id).length > 0 && origem.valor != destino.valor;
 
   }
-  obterCasa(origem: Casa) {
+  existePecaParaCaptura(origem: Casa, destino: Casa) {
     for (let linha = 1; linha < 9; linha++) {
       for (let coluna = 1; coluna < 9; coluna++) {
         const casa = this.tabuleiro.casas[linha][coluna];
         if (this.calcModuloDistanciaEntrePontos(origem, casa) == 1 && casa.peca) {
+          if (this.calcDistanciaEntrePontos(casa, destino) == 1 && casa.peca) {
+
+            return casa.peca.valor != origem.peca.valor;
+          }
+
+
+        }
+      }
+    }
+    return false;
+  }
+  obterCasa(origem: Casa, destino: Casa) {
+    for (let linha = 1; linha < 9; linha++) {
+      for (let coluna = 1; coluna < 9; coluna++) {
+        const casa = this.tabuleiro.casas[linha][coluna];
+        if (this.calcModuloDistanciaEntrePontos(origem, casa) == 1 && this.ediagonal(casa,destino) && casa.peca) {
+          console.log('foi');
           if (casa.peca.valor != origem.peca.valor) {
             return casa;
           }
-
         }
+        // if (this.calcModuloDistanciaEntrePontos(origem, casa) == 1 && casa.peca) {
+
+
+
+        // }
       }
     }
     return null;
@@ -219,6 +240,7 @@ export class TabuleiroComponent implements OnInit {
     return Math.pow(-1, this.ciclo) < 0;
   }
   mover(destino: Casa) {
+    if(this.casaSelecionada == null) return;
     destino.peca = Object.assign({}, this.casaSelecionada.peca);
     this.casaSelecionada.peca = null;
     if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 3) {
@@ -230,10 +252,10 @@ export class TabuleiroComponent implements OnInit {
 
   }
   moverPecaJogadorAdversario(destino: Casa) {
-
+    if(this.casaSelecionada == null) return;
     if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == this.adversario.valor) {
       if (this.ediagonal(this.casaSelecionada, destino) || this.ediagonalCaptura(this.casaSelecionada, destino)) {
-        this.capturar();
+        this.capturar(destino);
         this.mover(destino);
         this.jogador.jogadas = this.jogador.jogadas + 1;
         this.servico.notificaJogadorJogada.emit(this.jogador);
@@ -243,10 +265,10 @@ export class TabuleiroComponent implements OnInit {
     }
   }
   moverPecaJogadorDesafiante(destino: Casa) {
-
+    if(this.casaSelecionada == null) return;
     if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == this.desafiante.valor) {
       if (this.ediagonal(this.casaSelecionada, destino) || this.ediagonalCaptura(this.casaSelecionada, destino)) {
-        this.capturar();
+        this.capturar(destino);
         this.mover(destino);
         this.jogador.jogadas = this.jogador.jogadas + 1;
         this.servico.notificaJogadorJogada.emit(this.jogador);
@@ -283,11 +305,13 @@ export class TabuleiroComponent implements OnInit {
       this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
     }
   }
-  capturar() {
+  capturar(destino: Casa) {
 
-    const capturado = this.obterCasa(this.casaSelecionada);
+    const capturado = this.obterCasa(this.casaSelecionada, destino);
+    console.log('captura ',capturado);
     if (capturado && capturado.peca) {
       // this.informarCaptura(capturado);
+
       if (capturado.peca && capturado.peca.valor != this.jogador.valor) {
         this.jogador.pontos = this.jogador.pontos + 1;
       }

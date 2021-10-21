@@ -11,7 +11,7 @@ import { ExibeMensagensService } from './exibe-mensagens.service';
   styleUrls: ['./jogo-tabuleiro.component.scss']
 })
 export class JogoTabuleiroComponent implements OnInit, OnDestroy {
-  items: MegaMenuItem[];
+
   pecasJogador2Capturadas: Peca[] = [];
   pecasJogador1Capturadas: Peca[] = [];
   jogador: Jogador = new Desafiante('Jean');
@@ -31,7 +31,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.inicializaMenu();
+
     this.capturaPecasAdversario1();
     this.capturaPecasAdversario2();
     this.capturaPecaAtualAdversario2();
@@ -40,54 +40,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     this.capturaProximaJogada();
   }
 
-  inicializaMenu() {
-    this.items = [
-      {
-        label: 'Ferramentas', icon: 'pi pi-fw pi-video',
-        items: [
-          [
-            {
-              label: 'Jogo',
-              items: [
-                {
-                  label: 'Finalizar Jogo',
-                  command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
-                  }
-                },
-                {
-                  label: 'Novo Jogo',
-                  command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
-                  }
-                },
-                {
-                  label: 'Salvar Jogo',
-                  command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
-                  }
-                },
-                {
-                  label: 'Voltar',
-                  command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
-                  }
-                },
-                {
-                  label: 'Avançar',
-                  command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
-                  }
-                }
-              ]
-            },
 
-          ],
-
-        ]
-      }
-    ];
-  }
   capturaDadosJogador() {
     let instancia = this.servico.notificaJogadorJogada.subscribe(
       (jogador) => {

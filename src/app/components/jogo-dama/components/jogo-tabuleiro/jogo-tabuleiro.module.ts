@@ -20,7 +20,6 @@ import { TabuleiroComponent } from './tabuleiro/tabuleiro.component';
   ],
   imports: [
     CommonModule,
-    MegaMenuModule,
     PanelModule,
     TableModule,
     ButtonModule,
