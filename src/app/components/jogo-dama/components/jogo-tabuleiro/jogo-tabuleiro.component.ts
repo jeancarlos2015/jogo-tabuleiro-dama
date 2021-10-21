@@ -35,7 +35,8 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     this.capturaPecasAdversario2();
     this.capturaPecaAtualAdversario2();
     this.capturaPecaAtualAdversario1();
-    this.capturaJogador();
+    this.capturaDadosJogador();
+    this.capturaProximaJogada();
   }
 
   inicializaMenu() {
@@ -86,8 +87,22 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
       }
     ];
   }
-  capturaJogador() {
+  capturaDadosJogador() {
     let instancia = this.servico.notificaJogadorJogada.subscribe(
+      (jogador) => {
+
+        if (jogador.tipo == 'desafiante') {
+          this.desafiante = Object.assign({}, this.jogador);
+        }
+        if (jogador.tipo == 'adversario') {
+          this.adversario = Object.assign({}, this.jogador);
+        }
+      }
+    )
+    this.subscriptions.push(instancia);
+  }
+  capturaProximaJogada() {
+    let instancia = this.servico.proximaJogada.subscribe(
       (jogador) => {
         this.jogador = jogador;
       }

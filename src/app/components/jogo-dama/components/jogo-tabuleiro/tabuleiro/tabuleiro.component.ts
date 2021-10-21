@@ -21,8 +21,8 @@ export class TabuleiroComponent implements OnInit {
   pecasJogador2Capturadas: Peca[] = [];
   pecasJogador1Capturadas: Peca[] = [];
   @Input() jogador: Jogador = null;
-  @Input() desafiante: Jogador = new Desafiante();
-  @Input() adversario: Jogador = new Adversario();
+  @Input() desafiante: Jogador = null;
+  @Input() adversario: Jogador = null;
 
   constructor(private servico: JogoTabuleiroService) {
 
@@ -104,8 +104,17 @@ export class TabuleiroComponent implements OnInit {
 
   capturaItem(casa: Casa) {
     if (casa.peca == null) return;
-    casa.selecionado = !casa.selecionado;
-    this.casaSelecionada = casa;
+
+
+    if (casa.peca) {
+      casa.selecionado = casa.peca.valor == this.jogador.valor;
+    } else {
+      casa.selecionado = !casa.selecionado;
+    }
+    if (casa.selecionado) {
+      this.casaSelecionada = casa;
+    }
+
     if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == 3) {
       this.servico.pecaAtualJogador2Evento.emit(this.casaSelecionada);
     }
@@ -208,41 +217,39 @@ export class TabuleiroComponent implements OnInit {
 
   }
   moverPecaJogadorAdversario(destino: Casa) {
-    if (this.jogador instanceof Adversario) {
-      if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == this.jogador.valor) {
-        if (this.ediagonal(this.casaSelecionada, destino)) {
-          this.mover(destino);
-        } else if (this.ediagonalCaptura(this.casaSelecionada, destino)) {
-          this.capturar();
-          this.mover(destino);
-        }
 
+    if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == this.adversario.valor) {
+      if (this.ediagonal(this.casaSelecionada, destino) || this.ediagonalCaptura(this.casaSelecionada, destino)) {
+        this.capturar();
+        this.mover(destino);
+        this.jogador.jogadas = this.jogador.jogadas + 1;
+        this.servico.notificaJogadorJogada.emit(this.jogador);
+        this.jogador = Object.assign({}, this.desafiante);
       }
+
     }
   }
   moverPecaJogadorDesafiante(destino: Casa) {
-    if (this.jogador instanceof Desafiante) {
-      console.log(this.casaSelecionada);
-      console.log(this.jogador);
-      if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == this.jogador.valor) {
-        if (this.ediagonal(this.casaSelecionada, destino)) {
-          this.mover(destino);
-        } else if (this.ediagonalCaptura(this.casaSelecionada, destino)) {
-          this.capturar();
-          this.mover(destino);
-        }
+
+    if (this.casaSelecionada.peca && this.casaSelecionada.peca.valor == this.desafiante.valor) {
+      if (this.ediagonal(this.casaSelecionada, destino) || this.ediagonalCaptura(this.casaSelecionada, destino)) {
+        this.capturar();
+        this.mover(destino);
+        this.jogador.jogadas = this.jogador.jogadas + 1;
+        this.servico.notificaJogadorJogada.emit(this.jogador);
+        this.jogador = Object.assign({}, this.adversario);
       }
     }
   }
   moverPeca(destino: Casa) {
+
     if (this.jogador == null) return;
     if (destino == null) return;
     if (destino.peca) return;
     this.moverPecaJogadorAdversario(destino);
     this.moverPecaJogadorDesafiante(destino);
-    this.jogador = this.eJogadorDesafiante() ? Object.assign({}, this.desafiante) : Object.assign({}, this.adversario);
-    this.jogador.jogadas++;
-    this.servico.notificaJogadorJogada.emit(this.jogador);
+    this.servico.proximaJogada.emit(this.jogador);
+
 
     this.ciclo++;
 
@@ -270,6 +277,7 @@ export class TabuleiroComponent implements OnInit {
       this.informarCaptura(capturado);
       capturado.peca = null;
       capturado.selecionado = false;
+
     }
   }
 

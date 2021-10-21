@@ -40,13 +40,16 @@ export class Jogador {
   nick;
   valor = 1;
   jogadas = 0;
+  tipo;
   constructor(nick = ''){
     this.nick = nick;
   }
 }
 export class Adversario extends Jogador {
   valor = 2;
+  tipo = 'adversario';
 }
 export class Desafiante extends Jogador {
   valor = 3;
+  tipo = 'desafiante';
 }

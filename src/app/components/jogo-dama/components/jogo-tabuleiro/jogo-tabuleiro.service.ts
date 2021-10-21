@@ -10,6 +10,7 @@ export class JogoTabuleiroService {
   public pecasJogador1CapturadasEvento = new EventEmitter<Peca[]>();
   public pecasJogador2CapturadasEvento = new EventEmitter<Peca[]>();
   public notificaJogadorJogada = new EventEmitter<Jogador>();
+  public proximaJogada = new EventEmitter<Jogador>();
   constructor() { }
 
   // pecaAtualJogador1EventoMetodo(peca: Peca) {
