@@ -1,3 +1,4 @@
+import { ExibeMensagensService } from './../exibe-mensagens.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Adversario, Casa, Desafiante, Diagonal, Jogador, Peca, Tabuleiro } from '../../models/model';
 import { JogoTabuleiroService } from './../jogo-tabuleiro.service';
@@ -24,7 +25,10 @@ export class TabuleiroComponent implements OnInit {
   @Input() desafiante: Jogador = null;
   @Input() adversario: Jogador = null;
 
-  constructor(private servico: JogoTabuleiroService) {
+  constructor(
+    private servico: JogoTabuleiroService,
+    private mensagemService: ExibeMensagensService
+  ) {
 
   }
 
@@ -105,9 +109,10 @@ export class TabuleiroComponent implements OnInit {
   selecionarCasa(casa: Casa) {
     if (casa.peca == null) return;
 
-
     if (casa.peca) {
+      this.mensagemService.mostrarMensagemAtencao(casa.peca.valor != this.jogador.valor, 'É a vez do jogador :' + this.jogador.nick);
       casa.selecionado = casa.peca.valor == this.jogador.valor;
+
     } else {
       casa.selecionado = !casa.selecionado;
     }
@@ -122,9 +127,9 @@ export class TabuleiroComponent implements OnInit {
       this.servico.pecaAtualJogador1Evento.emit(this.casaSelecionada);
     }
 
-    this.tabuleiro.casas.forEach( vetCasas => {
-      vetCasas.forEach( casa => {
-        if(casa.selecionado){
+    this.tabuleiro.casas.forEach(vetCasas => {
+      vetCasas.forEach(casa => {
+        if (casa.selecionado) {
           casa.selecionado = casa.id == this.casaSelecionada.id;
         }
       })
@@ -282,7 +287,10 @@ export class TabuleiroComponent implements OnInit {
 
     const capturado = this.obterCasa(this.casaSelecionada);
     if (capturado && capturado.peca) {
-      this.informarCaptura(capturado);
+      // this.informarCaptura(capturado);
+      if (capturado.peca && capturado.peca.valor != this.jogador.valor) {
+        this.jogador.pontos = this.jogador.pontos + 1;
+      }
       capturado.peca = null;
       capturado.selecionado = false;
 

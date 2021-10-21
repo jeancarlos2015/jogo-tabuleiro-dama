@@ -11,6 +11,7 @@ import {MegaMenuModule} from 'primeng/megamenu';
 import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
 import { JogoTabuleiroService } from './components/jogo-dama/components/jogo-tabuleiro/jogo-tabuleiro.service';
+import { ExibeMensagensService } from './components/jogo-dama/components/jogo-tabuleiro/exibe-mensagens.service';
 @NgModule({
   declarations: [
     AppComponent
@@ -23,7 +24,7 @@ import { JogoTabuleiroService } from './components/jogo-dama/components/jogo-tab
     JogoDamaRoutingModule,
     JogoDamaModule,
   ],
-  providers: [MessageService,JogoTabuleiroService],
+  providers: [MessageService,JogoTabuleiroService,ExibeMensagensService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MegaMenuItem, MessageService } from 'primeng/api';
 import { Adversario, Desafiante, Jogador, Peca } from '../models/model';
 import { Subscription } from 'rxjs';
+import { ExibeMensagensService } from './exibe-mensagens.service';
 
 @Component({
   selector: 'app-jogo-tabuleiro',
@@ -22,7 +23,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
   pecaAtualJogador2: Peca = null;
   subscriptions: Subscription[] = [];
   constructor(
-    private messageService: MessageService,
+    private mensagemService: ExibeMensagensService,
     private servico: JogoTabuleiroService
   ) { }
   ngOnDestroy(): void {
@@ -51,31 +52,31 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
                 {
                   label: 'Finalizar Jogo',
                   command: () => {
-                    this.mostrarMensagemAtencao('Em desenvolvimento');
+                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Novo Jogo',
                   command: () => {
-                    this.mostrarMensagemAtencao('Em desenvolvimento');
+                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Salvar Jogo',
                   command: () => {
-                    this.mostrarMensagemAtencao('Em desenvolvimento');
+                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Voltar',
                   command: () => {
-                    this.mostrarMensagemAtencao('Em desenvolvimento');
+                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Avançar',
                   command: () => {
-                    this.mostrarMensagemAtencao('Em desenvolvimento');
+                    this.mensagemService.mostrarMensagemAtencao(true,'Em desenvolvimento');
                   }
                 }
               ]
@@ -109,21 +110,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     )
     this.subscriptions.push(instancia);
   }
-  mostrarMensagem(detail, summary, serverity) {
-    this.messageService.add({ severity: serverity, summary: summary, detail: detail });
-  }
-  mostrarMensagemSucesso(mensagem: string) {
-    this.mostrarMensagem(mensagem, 'Sucesso', 'success');
-  }
-
-  mostrarMensagemAtencao(mensagem: string) {
-    this.mostrarMensagem(mensagem, 'Atenção', 'warn');
-  }
-
-  mostrarMensagemErro(mensagem: string) {
-    this.mostrarMensagem(mensagem, 'Erro', 'error');
-  }
-  capturaPecasAdversario1() {
+    capturaPecasAdversario1() {
     let instancia = this.servico.pecasJogador1CapturadasEvento.subscribe(
       (pecas) => {
         this.pecasJogador1Capturadas = this.pecasJogador1Capturadas.concat(pecas);
