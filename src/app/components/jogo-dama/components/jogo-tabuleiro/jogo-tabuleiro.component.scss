@@ -13,13 +13,13 @@
 }
 
 .rotated {
-  transition: 0.5s;
+  transition: 2s;
   margin-right: 5%;
   transform: rotate(0deg); /* Equal to rotateZ(45deg) */
 }
 .rotated360 {
   margin-top: 20%;
   margin-left: 5%;
-  transition: 0.5s;
+  transition: 2s;
   transform: rotate(-180deg); /* Equal to rotateZ(45deg) */
 }
