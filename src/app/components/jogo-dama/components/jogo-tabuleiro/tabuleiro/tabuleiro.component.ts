@@ -2,6 +2,7 @@ import { ExibeMensagensService } from './../exibe-mensagens.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Adversario, Casa, Desafiante, Diagonal, Jogador, Peca, Tabuleiro } from '../../models/model';
 import { JogoTabuleiroService } from './../jogo-tabuleiro.service';
+import { JogoTabuleiroComponent } from '../jogo-tabuleiro.component';
 
 
 @Component({
@@ -9,7 +10,7 @@ import { JogoTabuleiroService } from './../jogo-tabuleiro.service';
   templateUrl: './tabuleiro.component.html',
   styleUrls: ['./tabuleiro.component.scss']
 })
-export class TabuleiroComponent implements OnInit {
+export class TabuleiroComponent extends JogoTabuleiroComponent {
   @Input() tabuleiro: Tabuleiro;
   casaSelecionada: Casa = null;
   COR_BRANCA = '';
@@ -26,12 +27,7 @@ export class TabuleiroComponent implements OnInit {
   @Input() adversario: Jogador = null;
   bloquearJogadaParaCaptura: boolean;
 
-  constructor(
-    private servico: JogoTabuleiroService,
-    private mensagemService: ExibeMensagensService
-  ) {
 
-  }
 
   ngOnInit(): void {
     this.desenhaTabuleiro();
@@ -46,55 +42,12 @@ export class TabuleiroComponent implements OnInit {
     this.digonais.push(diagonalPrincipal1);
     this.digonais.push(diagonalSecundaria1);
   }
-  ePositivo(n: number): boolean {
-    return Math.pow(-1, n) == 1;
-  }
 
 
-  desenhaTabuleiro() {
-    for (let linha = 1; linha < 9; linha++) {
 
-      if (!this.ePositivo(linha)) {
-        for (let coluna = 1; coluna < 9; coluna++) {
-          this.tabuleiro.casas[linha][coluna].ePreto = this.ePositivo(coluna);
-        }
-      }
 
-      if (this.ePositivo(linha)) {
-        for (let coluna = 1; coluna < 9; coluna++) {
-          this.tabuleiro.casas[linha][coluna].ePreto = !this.ePositivo(coluna);
-        }
-      }
 
-    }
-  }
-  preencherPecasJogadores() {
-    for (let linha = 1; linha < 4; linha++) {
-      for (let coluna = 1; coluna < 9; coluna++) {
-        if (this.tabuleiro.casas[linha][coluna].ePreto) {
-          this.tabuleiro.casas[linha][coluna].peca = new Peca(2);
-        }
-      }
-    }
-    for (let linha = 6; linha < 9; linha++) {
-      for (let coluna = 1; coluna < 9; coluna++) {
-        if (this.tabuleiro.casas[linha][coluna].ePreto) {
-          this.tabuleiro.casas[linha][coluna].peca = new Peca(3);
-        }
-      }
-    }
-  }
 
-  indexandoPecas() {
-    for (let linha = 1; linha < 9; linha++) {
-      for (let coluna = 1; coluna < 9; coluna++) {
-        if (this.tabuleiro.casas[linha][coluna].peca) {
-          this.tabuleiro.casas[linha][coluna].id = '' + linha + '' + coluna;
-        }
-
-      }
-    }
-  }
 
   selecionarCasa(casa: Casa) {
     if (casa.peca == null) return;

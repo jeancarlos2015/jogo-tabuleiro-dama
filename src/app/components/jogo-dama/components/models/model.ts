@@ -33,7 +33,9 @@ export class Tabuleiro {
         this.casas[linha][coluna] = new Casa();
         this.casas[linha][coluna].linha = linha;
         this.casas[linha][coluna].coluna = coluna;
+
       }
+
     }
   }
 }

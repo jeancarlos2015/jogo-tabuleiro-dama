@@ -30,8 +30,8 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
   flagRotacao = false;
   tabuleiro: Tabuleiro = new Tabuleiro();
   constructor(
-    private mensagemService: ExibeMensagensService,
-    private servico: JogoTabuleiroService
+    protected mensagemService: ExibeMensagensService,
+    protected servico: JogoTabuleiroService
   ) { }
   rotacionar() {
     if (!this.flagRotacao) return;
@@ -63,7 +63,26 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     this.capturaTabuleiro();
     this.inicializaMenu();
   }
+  ePositivo(n: number): boolean {
+    return Math.pow(-1, n) == 1;
+  }
+  desenhaTabuleiro() {
+    for (let linha = 1; linha < 9; linha++) {
 
+      if (!this.ePositivo(linha)) {
+        for (let coluna = 1; coluna < 9; coluna++) {
+          this.tabuleiro.casas[linha][coluna].ePreto = this.ePositivo(coluna);
+        }
+      }
+
+      if (this.ePositivo(linha)) {
+        for (let coluna = 1; coluna < 9; coluna++) {
+          this.tabuleiro.casas[linha][coluna].ePreto = !this.ePositivo(coluna);
+        }
+      }
+
+    }
+  }
   capturaTabuleiro() {
     let instancia = this.servico.sendTabuleiro.subscribe(
       (tabuleiro) => {
@@ -131,7 +150,40 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     )
     this.subscriptions.push(instancia);
   }
-
+  indexandoPecas() {
+    for (let linha = 1; linha < 9; linha++) {
+      for (let coluna = 1; coluna < 9; coluna++) {
+        if (this.tabuleiro.casas[linha][coluna].peca) {
+          this.tabuleiro.casas[linha][coluna].id = '' + linha + '' + coluna;
+        }
+      }
+    }
+  }
+  preencherPecasJogadores() {
+    for (let linha = 1; linha < 4; linha++) {
+      for (let coluna = 1; coluna < 9; coluna++) {
+        if (this.tabuleiro.casas[linha][coluna].ePreto) {
+          this.tabuleiro.casas[linha][coluna].peca = new Peca(2);
+        }
+      }
+    }
+    for (let linha = 6; linha < 9; linha++) {
+      for (let coluna = 1; coluna < 9; coluna++) {
+        if (this.tabuleiro.casas[linha][coluna].ePreto) {
+          this.tabuleiro.casas[linha][coluna].peca = new Peca(3);
+        }
+      }
+    }
+  }
+  novoJogo() {
+    this.tabuleiro = new Tabuleiro();
+    this.desenhaTabuleiro();
+    this.preencherPecasJogadores();
+    this.indexandoPecas();
+    this.jogador = new Desafiante('Jean');
+    this.desafianteJogador = new Desafiante('Jean');
+    this.adversarioJogador = new Adversario('João');
+  }
   inicializaMenu() {
     this.items = [
       {
@@ -150,7 +202,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
                 {
                   label: 'Novo Jogo',
                   command: () => {
-                    this.tabuleiro = new Tabuleiro();
+                    this.novoJogo();
                     this.servico.removerJogo();
                     this.inicializaMenu();
                   }
