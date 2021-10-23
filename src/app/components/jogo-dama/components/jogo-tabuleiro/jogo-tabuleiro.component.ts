@@ -1,5 +1,5 @@
 import { JogoTabuleiroService } from './jogo-tabuleiro.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MegaMenuItem, MessageService } from 'primeng/api';
 import { Adversario, Desafiante, Jogador, Peca } from '../models/model';
 import { Subscription } from 'rxjs';
@@ -15,17 +15,38 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
   pecasJogador2Capturadas: Peca[] = [];
   pecasJogador1Capturadas: Peca[] = [];
   jogador: Jogador = new Desafiante('Jean');
+  desafianteJogador: Jogador = new Desafiante('Jean');
+  adversarioJogador: Jogador = new Adversario('João');
   desafiante: Desafiante = new Desafiante('Jean');
-  adversario: Adversario = new Adversario('Computador');
+  adversario: Adversario = new Adversario('João');
   qtPecasCapturadasJogador1 = 0;
   qtPecasCapturadasJogador2 = 0;
   pecaAtualJogador1: Peca = null;
   pecaAtualJogador2: Peca = null;
   subscriptions: Subscription[] = [];
+  flagRotacionarFrente = true;
+  flagRotacionarTras = false;
+  items: MegaMenuItem[];
+  flagRotacao = false;
   constructor(
     private mensagemService: ExibeMensagensService,
     private servico: JogoTabuleiroService
   ) { }
+  rotacionar() {
+    if (!this.flagRotacao) return;
+    this.flagRotacionarFrente = !this.flagRotacionarFrente;
+    this.flagRotacionarTras = !this.flagRotacionarTras;
+    if (this.jogador.nick == this.adversarioJogador.nick) {
+      const jogador = Object.assign({}, this.adversarioJogador);
+      this.adversarioJogador = Object.assign({}, this.desafianteJogador);
+      this.desafianteJogador = Object.assign({}, jogador);
+    }
+    if (this.jogador.nick == this.desafianteJogador.nick) {
+      const jogador = Object.assign({}, this.desafianteJogador);
+      this.desafianteJogador = Object.assign({}, this.adversarioJogador);
+      this.adversarioJogador = Object.assign({}, jogador);
+    }
+  }
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => { if (sub) sub.unsubscribe() });
   }
@@ -38,6 +59,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     this.capturaPecaAtualAdversario1();
     this.capturaDadosJogador();
     this.capturaProximaJogada();
+    this.inicializaMenu();
   }
 
 
@@ -46,10 +68,10 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
       (jogador) => {
 
         if (jogador.tipo == 'desafiante') {
-          this.desafiante = Object.assign({}, this.jogador);
+          this.desafianteJogador = Object.assign({}, this.jogador);
         }
         if (jogador.tipo == 'adversario') {
-          this.adversario = Object.assign({}, this.jogador);
+          this.adversarioJogador = Object.assign({}, this.jogador);
         }
       }
     )
@@ -59,11 +81,12 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     let instancia = this.servico.proximaJogada.subscribe(
       (jogador) => {
         this.jogador = jogador;
+        this.rotacionar();
       }
     )
     this.subscriptions.push(instancia);
   }
-    capturaPecasAdversario1() {
+  capturaPecasAdversario1() {
     let instancia = this.servico.pecasJogador1CapturadasEvento.subscribe(
       (pecas) => {
         this.pecasJogador1Capturadas = this.pecasJogador1Capturadas.concat(pecas);
@@ -98,5 +121,60 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
       }
     )
     this.subscriptions.push(instancia);
+  }
+
+  inicializaMenu() {
+    this.items = [
+      {
+        label: 'Ferramentas', icon: 'pi pi-fw pi-video',
+        items: [
+          [
+            {
+              label: 'Jogo',
+              items: [
+                {
+                  label: 'Finalizar Jogo',
+                  command: () => {
+                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
+                  }
+                },
+                {
+                  label: 'Novo Jogo',
+                  command: () => {
+                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
+                  }
+                },
+                {
+                  label: 'Salvar Jogo',
+                  command: () => {
+                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
+                  }
+                },
+                {
+                  label: 'Voltar',
+                  command: () => {
+                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
+                  }
+                },
+                {
+                  label: 'Avançar',
+                  command: () => {
+                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
+                  }
+                },
+                {
+                  label: 'Habilitar Rotação',
+                  command: () => {
+                    this.flagRotacao = !this.flagRotacao;
+                  }
+                }
+              ]
+            },
+
+          ],
+
+        ]
+      }
+    ];
   }
 }

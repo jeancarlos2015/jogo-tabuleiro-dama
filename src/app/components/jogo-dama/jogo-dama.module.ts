@@ -1,3 +1,4 @@
+import { ButtonModule } from 'primeng/button';
 
 import { JogoTabuleiroModule } from './components/jogo-tabuleiro/jogo-tabuleiro.module';
 import { NgModule } from '@angular/core';
@@ -15,7 +16,7 @@ import { MegaMenuModule } from 'primeng/megamenu';
   ],
   imports: [
     CommonModule,
-    MegaMenuModule,
+    ButtonModule,
     JogoTabuleiroModule,
     JogoDamaRoutingModule,
     CadastroJogadorModule,

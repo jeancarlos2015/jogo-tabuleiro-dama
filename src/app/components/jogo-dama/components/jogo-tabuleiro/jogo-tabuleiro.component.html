@@ -1,4 +1,7 @@
 
+<p-megaMenu [model]="items"></p-megaMenu>
+
+
 <table style="width: 100%;zoom: 75%">
 
   <tr>
@@ -12,31 +15,34 @@
             <tr>
               <td *ngIf="jogador.valor == adversario.valor else naoEaVezAdversario">
 
-               <strong>Adversário: {{ adversario.nick }}</strong>
+               <strong>Adversário: {{ adversarioJogador.nick }}</strong>
               </td>
               <ng-template #naoEaVezAdversario>
-                <td>Adversário: {{ adversario.nick }}</td>
+                <td>Adversário: {{ adversarioJogador.nick }}</td>
               </ng-template>
-              <td>Pontos: {{ adversario.pontos }}</td>
+              <td>Pontos: {{ adversarioJogador.pontos }}</td>
               <td style="width: 33%;"></td>
-              <td>Jogadas: {{ adversario.jogadas }}</td>
+              <td>Jogadas: {{ adversarioJogador.jogadas }}</td>
             </tr>
           </table>
 
         </ng-template>
-        <app-tabuleiro [jogador]="jogador" [desafiante]="desafiante" [adversario]="adversario"></app-tabuleiro>
+        <div [ngClass]="{rotated: flagRotacionarFrente,rotated360:flagRotacionarTras}">
+          <app-tabuleiro [jogador]="jogador" [desafiante]="desafiante" [adversario]="adversario"></app-tabuleiro>
+        </div>
+
         <ng-template pTemplate="footer">
           <table style="width: 100%;">
             <tr>
               <td *ngIf="jogador.valor == desafiante.valor else naoEaVezDesafiante">
-              <strong>Desafiante: {{ desafiante.nick }}</strong>
+              <strong>Desafiante: {{ desafianteJogador.nick }}</strong>
               </td>
               <ng-template #naoEaVezDesafiante>
-                <td>Desafiante: {{ desafiante.nick }}</td>
+                <td>Desafiante: {{ desafianteJogador.nick }}</td>
               </ng-template>
-              <td>Pontos: {{ desafiante.pontos }}</td>
+              <td>Pontos: {{ desafianteJogador.pontos }}</td>
               <td style="width: 33%;"></td>
-              <td>Jogadas: {{ desafiante.jogadas }}</td>
+              <td>Jogadas: {{ desafianteJogador.jogadas }}</td>
             </tr>
           </table>
         </ng-template>
@@ -49,3 +55,5 @@
   </tr>
 
 </table>
+<!--
+<button pButton (click)="rotacionar()" pRipple type="button" label="Primary" class="p-button-rounded"></button> -->

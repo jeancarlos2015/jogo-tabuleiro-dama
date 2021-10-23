@@ -21,6 +21,7 @@ import { TabuleiroComponent } from './tabuleiro/tabuleiro.component';
   imports: [
     CommonModule,
     PanelModule,
+    MegaMenuModule,
     TableModule,
     ButtonModule,
     JogoTabuleiroRoutingModule
