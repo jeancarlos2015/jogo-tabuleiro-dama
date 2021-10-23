@@ -163,9 +163,10 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
                   }
                 },
                 {
-                  label: 'Habilitar Rotação',
+                  label: !this.flagRotacao ? 'Habilitar Rotação' : 'Desabilitar Rotação',
                   command: () => {
                     this.flagRotacao = !this.flagRotacao;
+                    this.inicializaMenu();
                   }
                 }
               ]
