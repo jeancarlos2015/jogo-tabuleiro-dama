@@ -10,7 +10,7 @@ import { JogoTabuleiroService } from './../jogo-tabuleiro.service';
   styleUrls: ['./tabuleiro.component.scss']
 })
 export class TabuleiroComponent implements OnInit {
-  tabuleiro: Tabuleiro = new Tabuleiro();
+  @Input() tabuleiro: Tabuleiro;
   casaSelecionada: Casa = null;
   COR_BRANCA = '';
   COR_PRETA = '';
@@ -34,7 +34,6 @@ export class TabuleiroComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.inicializaTabuleiro();
     this.desenhaTabuleiro();
     this.preencherPecasJogadores();
     this.indexandoPecas();
@@ -51,17 +50,7 @@ export class TabuleiroComponent implements OnInit {
     return Math.pow(-1, n) == 1;
   }
 
-  inicializaTabuleiro() {
-    this.tabuleiro.casas = [];
-    for (let linha = 1; linha < 9; linha++) {
-      this.tabuleiro.casas[linha] = [];
-      for (let coluna = 1; coluna < 9; coluna++) {
-        this.tabuleiro.casas[linha][coluna] = new Casa();
-        this.tabuleiro.casas[linha][coluna].linha = linha;
-        this.tabuleiro.casas[linha][coluna].coluna = coluna;
-      }
-    }
-  }
+
   desenhaTabuleiro() {
     for (let linha = 1; linha < 9; linha++) {
 
@@ -284,7 +273,7 @@ export class TabuleiroComponent implements OnInit {
     this.moverPecaJogadorAdversario(destino);
     this.moverPecaJogadorDesafiante(destino);
     this.servico.proximaJogada.emit(this.jogador);
-
+    this.servico.sendTabuleiro.emit(this.tabuleiro);
 
     this.ciclo++;
 

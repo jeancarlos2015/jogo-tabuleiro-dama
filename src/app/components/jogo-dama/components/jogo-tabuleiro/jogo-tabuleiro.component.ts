@@ -1,7 +1,7 @@
 import { JogoTabuleiroService } from './jogo-tabuleiro.service';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MegaMenuItem, MessageService } from 'primeng/api';
-import { Adversario, Desafiante, Jogador, Peca } from '../models/model';
+import { Adversario, Desafiante, Jogador, Jogo, Peca, Tabuleiro } from '../models/model';
 import { Subscription } from 'rxjs';
 import { ExibeMensagensService } from './exibe-mensagens.service';
 
@@ -28,6 +28,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
   flagRotacionarTras = false;
   items: MegaMenuItem[];
   flagRotacao = false;
+  tabuleiro: Tabuleiro = new Tabuleiro();
   constructor(
     private mensagemService: ExibeMensagensService,
     private servico: JogoTabuleiroService
@@ -59,10 +60,18 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     this.capturaPecaAtualAdversario1();
     this.capturaDadosJogador();
     this.capturaProximaJogada();
+    this.capturaTabuleiro();
     this.inicializaMenu();
   }
 
-
+  capturaTabuleiro() {
+    let instancia = this.servico.sendTabuleiro.subscribe(
+      (tabuleiro) => {
+        this.tabuleiro = tabuleiro;
+      }
+    )
+    this.subscriptions.push(instancia);
+  }
   capturaDadosJogador() {
     let instancia = this.servico.notificaJogadorJogada.subscribe(
       (jogador) => {
@@ -141,26 +150,35 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
                 {
                   label: 'Novo Jogo',
                   command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
+                    this.tabuleiro = new Tabuleiro();
+                    this.servico.removerJogo();
+                    this.inicializaMenu();
                   }
                 },
                 {
                   label: 'Salvar Jogo',
                   command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
+
+                    this.servico.salvarJogo(new Jogo(this.desafianteJogador, this.adversarioJogador, this.jogador, this.tabuleiro));
+
+                    this.inicializaMenu();
                   }
                 },
                 {
-                  label: 'Voltar',
+                  label: 'Ultimo Jogo Salvo',
                   command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
-                  }
-                },
-                {
-                  label: 'Avançar',
-                  command: () => {
-                    this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
-                  }
+                    if (this.servico.existeJogoSalvo) {
+
+                      const jogo = this.servico.recuperarJogo();
+                      this.desafianteJogador = jogo.desafiante;
+                      this.adversarioJogador = jogo.adversario;
+                      this.tabuleiro = jogo.tabuleiro;
+                      this.jogador = jogo.jogador;
+
+
+                      this.inicializaMenu();
+                    }
+                  },
                 },
                 {
                   label: !this.flagRotacao ? 'Habilitar Rotação' : 'Desabilitar Rotação',

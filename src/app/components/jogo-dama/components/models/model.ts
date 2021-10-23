@@ -24,6 +24,18 @@ export class Casa {
 }
 export class Tabuleiro {
   casas: Casa[][];
+
+  constructor() {
+    this.casas = [];
+    for (let linha = 1; linha < 9; linha++) {
+      this.casas[linha] = [];
+      for (let coluna = 1; coluna < 9; coluna++) {
+        this.casas[linha][coluna] = new Casa();
+        this.casas[linha][coluna].linha = linha;
+        this.casas[linha][coluna].coluna = coluna;
+      }
+    }
+  }
 }
 
 export class Diagonal {
@@ -41,7 +53,7 @@ export class Jogador {
   valor = 1;
   jogadas = 0;
   tipo;
-  constructor(nick = ''){
+  constructor(nick = '') {
     this.nick = nick;
   }
 }
@@ -52,4 +64,17 @@ export class Adversario extends Jogador {
 export class Desafiante extends Jogador {
   valor = 3;
   tipo = 'desafiante';
+}
+
+export class Jogo {
+  desafiante: Jogador;
+  adversario: Jogador;
+  jogador: Jogador;
+  tabuleiro: Tabuleiro;
+  constructor(desafiante, adversario, jogador, tabuleiro){
+    this.desafiante = desafiante;
+    this.adversario = adversario;
+    this.jogador = jogador;
+    this.tabuleiro = tabuleiro;
+  }
 }

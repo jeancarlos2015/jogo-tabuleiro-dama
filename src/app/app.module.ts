@@ -14,6 +14,7 @@ import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
 import { JogoTabuleiroService } from './components/jogo-dama/components/jogo-tabuleiro/jogo-tabuleiro.service';
 import { ExibeMensagensService } from './components/jogo-dama/components/jogo-tabuleiro/exibe-mensagens.service';
+import { PersistenceModule, PersistenceService } from 'angular-persistence';
 @NgModule({
   declarations: [
     AppComponent
@@ -22,12 +23,13 @@ import { ExibeMensagensService } from './components/jogo-dama/components/jogo-ta
     BrowserModule,
     BrowserAnimationsModule,
     ToastModule,
+    PersistenceModule,
     AppRoutingModule,
     JogoDamaRoutingModule,
     JogoDamaModule,
 
   ],
-  providers: [MessageService,JogoTabuleiroService,ExibeMensagensService],
+  providers: [MessageService,JogoTabuleiroService,ExibeMensagensService,PersistenceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

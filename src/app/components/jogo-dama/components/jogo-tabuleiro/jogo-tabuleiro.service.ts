@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Jogador, Peca } from '../models/model';
+import { PersistenceService, StorageType } from 'angular-persistence';
+import { Jogador, Jogo, Peca, Tabuleiro } from '../models/model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,10 @@ export class JogoTabuleiroService {
   public pecasJogador2CapturadasEvento = new EventEmitter<Peca[]>();
   public notificaJogadorJogada = new EventEmitter<Jogador>();
   public proximaJogada = new EventEmitter<Jogador>();
-  constructor() { }
+  public sendTabuleiro = new EventEmitter<Tabuleiro>();
+  constructor(
+    private persistence: PersistenceService
+  ) { }
 
   // pecaAtualJogador1EventoMetodo(peca: Peca) {
   //   this.pecaAtualJogador1Evento.emit(peca);
@@ -26,4 +30,25 @@ export class JogoTabuleiroService {
   // pecasJogador2CapturadasEventoMetodo(pecas: Peca[]) {
   //   this.pecasJogador2CapturadasEvento.emit(pecas);
   // }
+  salvarJogo(jogo: Jogo) {
+    this.persistence.set('jogoDama', jogo, { type: StorageType.SESSION });
+  }
+
+  recuperarJogo(): Jogo {
+    const jogo = this.persistence.get('jogoDama', StorageType.SESSION);
+    if (jogo) {
+      return jogo;
+    }
+    return null;
+  }
+
+  existeJogoSalvo() {
+    const jogo = this.recuperarJogo();
+    if (jogo) return true;
+    return false;
+  }
+
+  removerJogo() {
+    this.persistence.remove('jogoDama', StorageType.SESSION);
+  }
 }
