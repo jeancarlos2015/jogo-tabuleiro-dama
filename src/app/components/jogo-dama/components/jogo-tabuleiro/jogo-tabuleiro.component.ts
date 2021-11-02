@@ -118,7 +118,6 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
     let instancia = this.servico.pecasJogador1CapturadasEvento.subscribe(
       (pecas) => {
         this.pecasJogador1Capturadas = this.pecasJogador1Capturadas.concat(pecas);
-        this.qtPecasCapturadasJogador1 = this.pecasJogador1Capturadas.length;
       }
     )
     this.subscriptions.push(instancia);
@@ -187,7 +186,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
   inicializaMenu() {
     this.items = [
       {
-        label: 'Ferramentas', icon: 'pi pi-fw pi-video',
+        label: 'Ferramentas', icon: 'pi pi-home',
         items: [
           [
             {
@@ -195,12 +194,14 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
               items: [
                 {
                   label: 'Finalizar Jogo',
+                  icon:'pi pi-chevron-right',
                   command: () => {
                     this.mensagemService.mostrarMensagemAtencao(true, 'Em desenvolvimento');
                   }
                 },
                 {
                   label: 'Novo Jogo',
+                  icon:'pi pi-chevron-right',
                   command: () => {
                     this.novoJogo();
                     this.servico.removerJogo();
@@ -209,6 +210,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
                 },
                 {
                   label: 'Salvar Jogo',
+                  icon:'pi pi-chevron-right',
                   command: () => {
 
                     this.servico.salvarJogo(new Jogo(this.desafianteJogador, this.adversarioJogador, this.jogador, this.tabuleiro));
@@ -218,6 +220,7 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
                 },
                 {
                   label: 'Ultimo Jogo Salvo',
+                  icon:'pi pi-chevron-right',
                   command: () => {
                     if (this.servico.existeJogoSalvo) {
 
@@ -234,6 +237,8 @@ export class JogoTabuleiroComponent implements OnInit, OnDestroy {
                 },
                 {
                   label: !this.flagRotacao ? 'Habilitar Rotação' : 'Desabilitar Rotação',
+
+                  icon:'pi pi-chevron-right',
                   command: () => {
                     this.flagRotacao = !this.flagRotacao;
                     this.inicializaMenu();

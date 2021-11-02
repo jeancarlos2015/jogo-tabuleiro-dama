@@ -169,11 +169,6 @@ export class TabuleiroComponent extends JogoTabuleiroComponent {
             return casa;
           }
         }
-        // if (this.calcModuloDistanciaEntrePontos(origem, casa) == 1 && casa.peca) {
-
-
-
-        // }
       }
     }
     return null;
@@ -200,6 +195,7 @@ export class TabuleiroComponent extends JogoTabuleiroComponent {
         this.capturar(destino);
         this.mover(destino);
         this.jogador.jogadas = this.jogador.jogadas + 1;
+        this.adversario.jogadas = this.jogador.jogadas;
         this.servico.notificaJogadorJogada.emit(this.jogador);
         this.jogador = Object.assign({}, this.desafiante);
       }
@@ -214,6 +210,7 @@ export class TabuleiroComponent extends JogoTabuleiroComponent {
         this.mover(destino);
         this.jogador.jogadas = this.jogador.jogadas + 1;
         this.servico.notificaJogadorJogada.emit(this.jogador);
+        this.desafiante.jogadas = this.jogador.jogadas;
         this.jogador = Object.assign({}, this.adversario);
       }
     }
